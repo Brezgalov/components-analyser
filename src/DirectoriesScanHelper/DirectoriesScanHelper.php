@@ -33,7 +33,7 @@ class DirectoriesScanHelper
      * @return array|false
      * @throws MaxDeepOverflowException
      */
-    public function getDirectoryFiles(string $dir, $fullPath = true, $maxDeep = 100, $dieOnMaxDeep = true)
+    public function getDirectoryFiles(string $dir, $fullPath = true, $maxDeep = 100, $dieOnMaxDeep = true, $filePattern = '.php$')
     {
         $directoryContents = $this->scanDirContents($dir);
         if (!$directoryContents) {
@@ -48,6 +48,10 @@ class DirectoriesScanHelper
             $itemPath = "{$dir}/{$item}";
 
             if (is_file($itemPath)) {
+                if ($filePattern && !preg_match("/{$filePattern}/", $itemPath)) {
+                    continue;
+                }
+                
                 $files[] = $fullPath ? $itemPath : $item;
             } elseif (is_dir($itemPath)) {
                 if ($deep >= $maxDeep) {

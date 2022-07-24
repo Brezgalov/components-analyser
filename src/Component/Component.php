@@ -2,6 +2,8 @@
 
 namespace Brezgalov\ComponentsAnalyser\Component;
 
+use Brezgalov\ComponentsAnalyser\DirectoriesScanHelper\DirectoriesScanHelper;
+
 class Component
 {
     /**
@@ -13,6 +15,11 @@ class Component
      * @var string
      */
     protected $rootDirectoryPath;
+
+    /**
+     * @var array
+     */
+    public $files = [];
 
     /**
      * Component constructor.

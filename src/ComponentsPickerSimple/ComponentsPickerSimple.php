@@ -4,46 +4,45 @@ namespace Brezgalov\ComponentsAnalyser\ComponentsPickerSimple;
 
 use Brezgalov\ComponentsAnalyser\Component\Component;
 use Brezgalov\ComponentsAnalyser\ComponentsPicker\IComponentsPicker;
+use Brezgalov\ComponentsAnalyser\DirectoriesScanHelper\DirectoriesScanHelper;
 
 class ComponentsPickerSimple implements IComponentsPicker
 {
+    /**
+     * @var DirectoriesScanHelper
+     */
+    public $dirHelper;
+
+    /**
+     * ComponentsPickerSimple constructor.
+     */
+    public function __construct()
+    {
+        $this->dirHelper = new DirectoriesScanHelper();
+    }
+
     /**
      * @param string $componentsDir
      * @return Component[]
      */
     public function getComponentsList(string $componentsDir)
     {
-        $componentsFolders = $this->scanDirContents($componentsDir);
+        $componentsFolders = $this->dirHelper->scanDirContents($componentsDir);
 
+        if (empty($componentsFolders)) {
+            return $componentsFolders;
+        }
+
+        $components = [];
         foreach ($componentsFolders as $compName) {
             $compPath = "{$componentsDir}/{$compName}";
 
-            if (!is_dir($compPath)) {
-                continue;
-            }
-
             $compModel = new Component($compName, $compPath);
+            $compModel->files = $this->dirHelper->getDirectoryFiles($compPath);
 
-            $components[$compName] = [
-                'files' => scandir_recursive($compPath)
-            ];
-
-            foreach ($components[$compName]['files'] as $file) {
-                $components[$compName]['tokens'][$file] = [];
-
-                foreach (token_get_all(file_get_contents($file)) as $token) {
-                    if (is_array($token)) {
-                        $components[$compName]['tokens'][$file][] = [
-                            'tokenName' => token_name($token[0]),
-                            'tokenVal' => $token[1],
-                            'stringNum' => $token[2],
-                        ];
-                    }
-                }
-            }
-
+            $components[$compName] = $compModel;
         }
 
-        return [];
+        return $components;
     }
 }

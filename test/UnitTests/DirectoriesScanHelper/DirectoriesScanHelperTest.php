@@ -55,34 +55,27 @@ class DirectoriesScanHelperTest extends BaseTestCase
 
         $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false);
 
-        $fileTriggerBLocal = "MyFolder/MySubFolder/TriggerB.php";
-        $fileTriggerCLocal = "MyFolder/TriggerC.php";
-        $compAFileLocal = "CompA.php";
 
         $this->assertIsArray($files);
         $this->assertCount(3, $files);
-        $this->assertTrue(in_array($fileTriggerBLocal, $files));
-        $this->assertTrue(in_array($fileTriggerCLocal, $files));
-        $this->assertTrue(in_array($compAFileLocal, $files));
+        $this->assertTrue(in_array(static::FILE_COMP_A_TRIGGER_B_LOCAL, $files));
+        $this->assertTrue(in_array(static::FILE_COMP_A_TRIGGER_C_LOCAL, $files));
+        $this->assertTrue(in_array(static::FILE_COMP_A_LOCAL, $files));
 
         $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A");
 
-        $fileTriggerBAbsolute = TEST_DIR . "/ExampleComponents/A/{$fileTriggerBLocal}";
-        $fileTriggerCAbsolute = TEST_DIR . "/ExampleComponents/A/{$fileTriggerCLocal}";
-        $compAFileAbsolute = TEST_DIR . "/ExampleComponents/A/{$compAFileLocal}";
-
         $this->assertIsArray($files);
         $this->assertCount(3, $files);
-        $this->assertTrue(in_array($fileTriggerBAbsolute, $files));
-        $this->assertTrue(in_array($fileTriggerCAbsolute, $files));
-        $this->assertTrue(in_array($compAFileAbsolute, $files));
+        $this->assertTrue(in_array(static::FILE_A_TRIGGER_B_ABSOLUTE, $files));
+        $this->assertTrue(in_array(static::FILE_A_TRIGGER_C_ABSOLUTE, $files));
+        $this->assertTrue(in_array(static::FILE_COMP_A_ABSOLUTE, $files));
 
         $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 1, false);
 
         $this->assertIsArray($files);
         $this->assertCount(2, $files);
-        $this->assertTrue(in_array($fileTriggerCLocal, $files));
-        $this->assertTrue(in_array($compAFileLocal, $files));
+        $this->assertTrue(in_array(static::FILE_COMP_A_TRIGGER_C_LOCAL, $files));
+        $this->assertTrue(in_array(static::FILE_COMP_A_LOCAL, $files));
 
         try {
             $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 1, true);
@@ -91,5 +84,11 @@ class DirectoriesScanHelperTest extends BaseTestCase
         }
 
         $this->assertInstanceOf(MaxDeepOverflowException::class, $ex);
+
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 100, true, false);
+
+        $this->assertIsArray($files);
+        $this->assertCount(4, $files);
+        $this->assertTrue(in_array(static::FILE_COMP_A_CONFIG_JSON_LOCAL, $files));
     }
 }
