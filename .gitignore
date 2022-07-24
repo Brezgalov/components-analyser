@@ -1,0 +1,5 @@
+.idea
+.phpunit.cache
+vendor
+coverage
+test/db.local.php

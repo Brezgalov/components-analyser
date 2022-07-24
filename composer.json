@@ -1,0 +1,28 @@
+{
+  "name": "brezgalov/components-analyser",
+  "description": "Static analyser of components dependencies",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Oleg Brezgalov",
+      "email": "oleg.brezgalov@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.2.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Brezgalov\\ComponentsAnalyser\\": "src/",
+      "Brezgalov\\ComponentsAnalyser\\UnitTests\\": "test/UnitTests/"
+    }
+  },
+  "scripts": {
+    "test": "./vendor/bin/phpunit test",
+    "test-coverage": "./vendor/bin/phpunit test --coverage-html coverage"
+  }
+}
