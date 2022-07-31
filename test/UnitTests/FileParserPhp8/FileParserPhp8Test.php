@@ -9,6 +9,8 @@ use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
 /**
  * Class FileParserPhp8Test
  * @package Brezgalov\ComponentsAnalyser\UnitTests\FileParserPhp8
+ *
+ * @requires PHP >= 8.0
  */
 class FileParserPhp8Test extends BaseTestCase
 {
