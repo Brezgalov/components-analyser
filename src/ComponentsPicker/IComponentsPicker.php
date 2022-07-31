@@ -2,7 +2,7 @@
 
 namespace Brezgalov\ComponentsAnalyser\ComponentsPicker;
 
-use Brezgalov\ComponentsAnalyser\Component\Component;
+use Brezgalov\ComponentsAnalyser\ComponentsPicker\Models\Component;
 
 interface IComponentsPicker
 {

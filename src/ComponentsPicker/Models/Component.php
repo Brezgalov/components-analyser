@@ -1,10 +1,8 @@
 <?php
 
-namespace Brezgalov\ComponentsAnalyser\Component;
+namespace Brezgalov\ComponentsAnalyser\ComponentsPicker\Models;
 
-use Brezgalov\ComponentsAnalyser\DirectoriesScanHelper\DirectoriesScanHelper;
-
-class Component
+class Component implements IComponent
 {
     /**
      * @var string
@@ -17,7 +15,7 @@ class Component
     protected $rootDirectoryPath;
 
     /**
-     * @var array
+     * @var string[]
      */
     public $files = [];
 
@@ -46,5 +44,13 @@ class Component
     public function getRootDirectoryPath()
     {
         return $this->rootDirectoryPath;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getFilesList()
+    {
+        return $this->files;
     }
 }

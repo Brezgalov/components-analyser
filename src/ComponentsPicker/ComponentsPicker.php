@@ -2,15 +2,14 @@
 
 namespace Brezgalov\ComponentsAnalyser\ComponentsPicker;
 
-use Brezgalov\ComponentsAnalyser\Component\Component;
+
+use Brezgalov\ComponentsAnalyser\ComponentsPicker\Models\IComponent;
 
 abstract class ComponentsPicker implements IComponentsPicker
 {
-
-
     /**
      * @param string $componentsDir
-     * @return Component[]
+     * @return IComponent[]
      */
     public abstract function getComponentsList(string $componentsDir);
 }

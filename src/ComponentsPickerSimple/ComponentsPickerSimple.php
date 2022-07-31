@@ -2,9 +2,11 @@
 
 namespace Brezgalov\ComponentsAnalyser\ComponentsPickerSimple;
 
-use Brezgalov\ComponentsAnalyser\Component\Component;
+use Brezgalov\ComponentsAnalyser\ComponentsPicker\Models\Component;
 use Brezgalov\ComponentsAnalyser\ComponentsPicker\IComponentsPicker;
+use Brezgalov\ComponentsAnalyser\ComponentsPicker\Models\IComponent;
 use Brezgalov\ComponentsAnalyser\DirectoriesScanHelper\DirectoriesScanHelper;
+use Brezgalov\ComponentsAnalyser\DirectoriesScanHelper\MaxDeepOverflowException;
 
 class ComponentsPickerSimple implements IComponentsPicker
 {
@@ -23,7 +25,8 @@ class ComponentsPickerSimple implements IComponentsPicker
 
     /**
      * @param string $componentsDir
-     * @return Component[]
+     * @return Component[]|false
+     * @throws MaxDeepOverflowException
      */
     public function getComponentsList(string $componentsDir)
     {

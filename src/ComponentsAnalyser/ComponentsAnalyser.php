@@ -1,11 +1,11 @@
 <?php
 
-namespace Brezgalov\ComponentsAnalyser\Analyser;
+namespace Brezgalov\ComponentsAnalyser\ComponentsAnalyser;
 
-use Brezgalov\ComponentsAnalyser\Analyser\Models\AnalysisResult;
+use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\AnalysisResult;
 use Brezgalov\ComponentsAnalyser\ComponentsPicker\IComponentsPicker;
 
-class Analyser
+class ComponentsAnalyser
 {
     /**
      * Unique File paths to scanned directories

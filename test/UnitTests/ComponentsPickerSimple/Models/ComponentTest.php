@@ -1,15 +1,15 @@
 <?php
 
-namespace Brezgalov\ComponentsAnalyser\UnitTests\Component;
+namespace Brezgalov\ComponentsAnalyser\UnitTests\ComponentsPicker\Models;
 
-use Brezgalov\ComponentsAnalyser\Component\Component;
+use Brezgalov\ComponentsAnalyser\ComponentsPicker\Models\Component;
 use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
 
 /**
  * Class ComponentTest
  * @package Brezgalov\ComponentsAnalyser\UnitTests\Component
  *
- * @coversDefaultClass \Brezgalov\ComponentsAnalyser\Component\Component
+ * @coversDefaultClass \Brezgalov\ComponentsAnalyser\ComponentsPicker\Models\Component
  */
 class ComponentTest extends BaseTestCase
 {

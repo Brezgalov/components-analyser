@@ -2,8 +2,8 @@
 
 namespace Brezgalov\ComponentsAnalyser\UnitTests\Analyser;
 
-use Brezgalov\ComponentsAnalyser\Analyser\Analyser;
-use Brezgalov\ComponentsAnalyser\Analyser\Models\AnalysisResult;
+use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\ComponentsAnalyser;
+use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\AnalysisResult;
 use Brezgalov\ComponentsAnalyser\ComponentsPickerSimple\ComponentsPickerSimple;
 use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
 
@@ -11,7 +11,7 @@ use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
  * Class AnalyserTest
  * @package Brezgalov\ComponentsAnalyser\UnitTests\Analyser
  *
- * @coversDefaultClass \Brezgalov\ComponentsAnalyser\Analyser\Analyser
+ * @coversDefaultClass \Brezgalov\ComponentsAnalyser\ComponentsAnalyser\ComponentsAnalyser
  */
 class AnalyserTest extends BaseTestCase
 {
@@ -27,16 +27,16 @@ class AnalyserTest extends BaseTestCase
     {
         $picker = new ComponentsPickerSimple();
 
-        $analyser = new Analyser($picker);
+        $analyser = new ComponentsAnalyser($picker);
         $this->assertEquals([], $analyser->getScannedDirectories());
 
-        $analyser = new Analyser($picker, __DIR__);
+        $analyser = new ComponentsAnalyser($picker, __DIR__);
         $this->assertEquals([__DIR__], $analyser->getScannedDirectories());
 
-        $analyser = new Analyser($picker, [__DIR__, __DIR__]);
+        $analyser = new ComponentsAnalyser($picker, [__DIR__, __DIR__]);
         $this->assertEquals([__DIR__], $analyser->getScannedDirectories());
 
-        $analyser = new Analyser($picker);
+        $analyser = new ComponentsAnalyser($picker);
         $analyser->addScanDir(__DIR__);
         $analyser->addScanDirs([
             __DIR__ . '/../',
@@ -54,14 +54,14 @@ class AnalyserTest extends BaseTestCase
         $directoryMissing = __DIR__ . '/' . uniqid();
 
         try {
-            $analyser = new Analyser($picker, $directoryMissing);
+            $analyser = new ComponentsAnalyser($picker, $directoryMissing);
         } catch (\Exception $ex1) {
 
         }
 
         $this->assertNotEmpty($ex1);
 
-        $analyser = new Analyser($picker);
+        $analyser = new ComponentsAnalyser($picker);
         try {
             $analyser->addScanDir($directoryMissing);
         } catch (\Exception $ex2) {
@@ -71,7 +71,7 @@ class AnalyserTest extends BaseTestCase
         $this->assertNotEmpty($ex2);
 
         try {
-            $analyser = new Analyser($picker, true);
+            $analyser = new ComponentsAnalyser($picker, true);
         } catch (\Exception $ex3) {
 
         }
@@ -86,7 +86,7 @@ class AnalyserTest extends BaseTestCase
     {
         $picker = new ComponentsPickerSimple();
 
-        $analyser = new Analyser($picker, TEST_DIR . '/ExampleComponents');
+        $analyser = new ComponentsAnalyser($picker, TEST_DIR . '/ExampleComponents');
 
         $result = $analyser->scanComponents();
 
