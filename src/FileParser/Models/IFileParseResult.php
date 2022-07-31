@@ -9,4 +9,9 @@ interface IFileParseResult
      * @return string[]
      */
     public function getUseDependencies();
+
+    /**
+     * @return string|null
+     */
+    public function getError();
 }

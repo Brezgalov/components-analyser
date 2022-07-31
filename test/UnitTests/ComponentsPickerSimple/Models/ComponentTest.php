@@ -25,4 +25,21 @@ class ComponentTest extends BaseTestCase
         $this->assertEquals('test-comp', $comp->getId());
         $this->assertEquals(__DIR__, $comp->getRootDirectoryPath());
     }
+
+    /**
+     * @covers ::getFilesList
+     */
+    public function testFilesList()
+    {
+        $comp = new Component('test-comp', __DIR__);
+
+        $files = [
+            'test1',
+            'test2',
+        ];
+
+        $comp->files = $files;
+
+        $this->assertEquals($files, $comp->getFilesList());
+    }
 }

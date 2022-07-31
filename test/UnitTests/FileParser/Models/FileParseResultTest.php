@@ -16,7 +16,7 @@ class FileParseResultTest extends BaseTestCase
     /**
      * @covers ::getUseDependencies
      */
-    public function testConstructor()
+    public function testDependencies()
     {
         $array = [
             '213',
@@ -27,5 +27,16 @@ class FileParseResultTest extends BaseTestCase
         $result->useClasses = $array;
 
         $this->assertEquals($array, $result->getUseDependencies());
+    }
+
+    /**
+     * @covers ::getError
+     */
+    public function testError()
+    {
+        $result = new FileParseResult();
+        $result->error = '123';
+
+        $this->assertEquals('123', $result->getError());
     }
 }

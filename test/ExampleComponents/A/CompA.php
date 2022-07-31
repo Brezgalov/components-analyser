@@ -1,8 +1,8 @@
 <?php
 
-namespace Parser\Components\A;
+namespace ExampleComponents\A;
 
-use Parser\Components\B\CompB;
+use ExampleComponents\B\CompB;
 
 class CompA
 {

@@ -59,7 +59,7 @@ class ComponentsPickerSimpleTest extends BaseTestCase
         $this->assertTrue(in_array(static::FILE_COMP_A_ABSOLUTE, $components['A']->files));
 
         $this->assertIsArray($components['B']->files);
-        $this->assertCount(1, $components['B']->files);
+        $this->assertCount(2, $components['B']->files);
         $this->assertTrue(in_array(static::FILE_COMP_B_ABSOLUTE, $components['B']->files));
 
         $this->assertIsArray($components['C']->files);

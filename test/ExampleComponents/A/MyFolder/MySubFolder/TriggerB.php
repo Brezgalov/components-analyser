@@ -1,8 +1,8 @@
 <?php
 
-namespace Parser\Components\A\MyFolder;
+namespace ExampleComponents\A\MyFolder;
 
-use Parser\Components\B\CompB;
+use ExampleComponents\B\CompB;
 
 class TriggerB
 {
