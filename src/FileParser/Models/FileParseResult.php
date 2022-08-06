@@ -15,6 +15,16 @@ class FileParseResult implements IFileParseResult
     public $useClasses = [];
 
     /**
+     * @var string
+     */
+    public $namespace;
+
+    /**
+     * @var string
+     */
+    public $className;
+
+    /**
      * @return string[]
      */
     public function getUseDependencies()
@@ -28,5 +38,13 @@ class FileParseResult implements IFileParseResult
     public function getError()
     {
         return $this->error;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullClassName()
+    {
+        return "{$this->namespace}\\{$this->className}";
     }
 }

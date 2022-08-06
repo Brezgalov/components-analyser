@@ -10,6 +10,8 @@ class FileParserPhp7 extends FileParser
     const TOKEN_NS_SEPARATOR = "T_NS_SEPARATOR";
     const TOKEN_USE = "T_USE";
     const TOKEN_STRING = "T_STRING";
+    const TOKEN_NAMESPACE = "T_NAMESPACE";
+    const TOKEN_CLASS = "T_CLASS";
 
     public function parseFile(string $filePath)
     {
@@ -26,6 +28,8 @@ class FileParserPhp7 extends FileParser
         }
 
         $useToken = false;
+        $namespaceIsBuilding = false;
+        $classNamePassed = false;
         $dependency = null;
         foreach ($tokens as $tokenInfo) {
             if (is_string($tokenInfo)) {
@@ -36,19 +40,42 @@ class FileParserPhp7 extends FileParser
                     $dependency = null;
                 }
 
+                if ($namespaceIsBuilding) {
+                    $namespaceIsBuilding = false;
+                }
+
                 continue;
             }
 
             list($tokenCode, $tokenVal) = $tokenInfo;
             $tokenName = token_name($tokenCode);
 
-            if ($tokenName == self::TOKEN_USE) {
-                $useToken = true;
-                continue;
+            switch ($tokenName) {
+                case self::TOKEN_USE: {
+                    $useToken = true;
+                    continue 2;
+                }
+                case self::TOKEN_NAMESPACE: {
+                    $result->namespace = '';
+                    $namespaceIsBuilding = true;
+                    continue 2;
+                }
+                case self::TOKEN_CLASS: {
+                    $classNamePassed = true;
+                    continue 2;
+                }
             }
 
             if ($useToken && ($tokenName == self::TOKEN_STRING || $tokenName == self::TOKEN_NS_SEPARATOR)) {
                 $dependency .= $tokenVal;
+            }
+
+            if ($namespaceIsBuilding && ($tokenName == self::TOKEN_STRING || $tokenName == self::TOKEN_NS_SEPARATOR)) {
+                $result->namespace .= $tokenVal;
+            }
+
+            if ($classNamePassed && $tokenName == self::TOKEN_STRING && empty($result->className)) {
+                $result->className = $tokenVal;
             }
         }
 

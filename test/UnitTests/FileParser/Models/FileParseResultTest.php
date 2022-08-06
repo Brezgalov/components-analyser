@@ -39,4 +39,16 @@ class FileParseResultTest extends BaseTestCase
 
         $this->assertEquals('123', $result->getError());
     }
+
+    /**
+     * @covers ::getFullClassName
+     */
+    public function testClassName()
+    {
+        $result = new FileParseResult();
+        $result->namespace = 'app\test';
+        $result->className = 'MyTestClass';
+
+        $this->assertEquals('app\test\MyTestClass', $result->getFullClassName());
+    }
 }

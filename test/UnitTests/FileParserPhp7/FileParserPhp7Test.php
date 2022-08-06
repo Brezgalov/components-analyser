@@ -40,5 +40,9 @@ class FileParserPhp7Test extends BaseTestCase
 
         $this->assertTrue(in_array("ExampleComponents\C\CompC", $useDepends));
         $this->assertTrue(in_array("ExampleComponents\B\CompB", $useDepends));
+
+        $this->assertEquals("ExampleComponents\A\MyFolder", $result->namespace);
+        $this->assertEquals("TriggerC", $result->className);
+        $this->assertEquals("ExampleComponents\A\MyFolder\TriggerC", $result->getFullClassName());
     }
 }
