@@ -1,9 +1,9 @@
 <?php
 
-namespace ExampleComponents\A\MyFolder;
+namespace ExampleComponentsCircled\A\MyFolder;
 
-use ExampleComponents\C\CompC;
-use ExampleComponents\B\CompB;
+use ExampleComponentsCircled\C\CompC;
+use ExampleComponentsCircled\B\CompB;
 
 class TriggerC
 {

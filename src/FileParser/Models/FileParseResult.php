@@ -45,6 +45,6 @@ class FileParseResult implements IFileParseResult
      */
     public function getFullClassName()
     {
-        return "{$this->namespace}\\{$this->className}";
+        return $this->className ? "{$this->namespace}\\{$this->className}" : null;
     }
 }

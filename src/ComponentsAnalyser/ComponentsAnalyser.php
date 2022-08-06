@@ -2,8 +2,10 @@
 
 namespace Brezgalov\ComponentsAnalyser\ComponentsAnalyser;
 
-use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\AnalysisResult;
+use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\AnalysisDataPhpRepository;
+use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\IAnalysisDataRepository;
 use Brezgalov\ComponentsAnalyser\ComponentsPicker\IComponentsPicker;
+use Brezgalov\ComponentsAnalyser\FileParser\IFileParser;
 
 class ComponentsAnalyser
 {
@@ -22,11 +24,24 @@ class ComponentsAnalyser
     protected $componentsPicker;
 
     /**
+     * @var IFileParser
+     */
+    protected $fileParser;
+
+    /**
+     * @var IAnalysisDataRepository
+     */
+    protected $dataRepository;
+
+    /**
      * AnalyserSetup constructor.
+     * @param IComponentsPicker $picker
+     * @param IFileParser $fileParser
      * @param array|string $dir - Full path / Array of full paths to scanned directories
+     * @param IAnalysisDataRepository $dataRepository
      * @throws \Exception
      */
-    public function __construct(IComponentsPicker $picker, $dir = null)
+    public function __construct(IComponentsPicker $picker, IFileParser $fileParser, $dir = null, IAnalysisDataRepository $dataRepository = null)
     {
         if (!empty($dir)) {
             if (is_string($dir)) {
@@ -39,6 +54,9 @@ class ComponentsAnalyser
         }
 
         $this->componentsPicker = $picker;
+        $this->fileParser = $fileParser;
+
+        $this->dataRepository = $dataRepository ?: new AnalysisDataPhpRepository();
     }
 
     /**
@@ -80,18 +98,48 @@ class ComponentsAnalyser
     }
 
     /**
-     * @return AnalysisResult
+     * @return IAnalysisDataRepository
      */
     public function scanComponents()
     {
-        $result = new AnalysisResult();
+        $dataRepository = clone $this->dataRepository;
 
         $componentsDirs = $this->getScannedDirectories();
 
         foreach ($componentsDirs as $componentsDir) {
+            // get components files list
+            $components = $this->componentsPicker->getComponentsList($componentsDir);
 
+            foreach ($components as $component) {
+                $dataRepository->addComponentDirToMap(
+                    $component->getRootDirectoryPath(),
+                    $component->getId()
+                );
+
+                foreach ($component->getFilesList() as $filePath) {
+                    $fileParseResult = $this->fileParser->parseFile($filePath);
+
+                    $dataRepository->addComponentOwnClass(
+                        $component->getRootDirectoryPath(),
+                        $fileParseResult->getFullClassName()
+                    );
+
+                    $dataRepository->addClassFile(
+                        $fileParseResult->getFullClassName(),
+                        $filePath
+                    );
+
+                    foreach ($fileParseResult->getUseDependencies() as $dependencyClass) {
+                        $dataRepository->addComponentDependency(
+                            $component->getRootDirectoryPath(),
+                            $fileParseResult->getFullClassName(),
+                            $dependencyClass
+                        );
+                    }
+                }
+            }
         }
 
-        return $result;
+        return $dataRepository;
     }
 }

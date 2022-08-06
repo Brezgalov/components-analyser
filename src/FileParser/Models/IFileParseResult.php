@@ -14,4 +14,9 @@ interface IFileParseResult
      * @return string|null
      */
     public function getError();
+
+    /**
+     * @return string
+     */
+    public function getFullClassName();
 }

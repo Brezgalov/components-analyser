@@ -21,7 +21,7 @@ class DirectoriesScanHelperTest extends BaseTestCase
     {
         $helper = new DirectoriesScanHelper();
 
-        $contents = $helper->scanDirContents(TEST_DIR . "/ExampleComponents");
+        $contents = $helper->scanDirContents(TEST_DIR . "/ExampleComponentsCircled");
 
         $this->assertIsArray($contents);
         $this->assertCount(3, $contents);
@@ -49,11 +49,11 @@ class DirectoriesScanHelperTest extends BaseTestCase
     {
         $helper = new DirectoriesScanHelper();
 
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/" . uniqid());
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/" . uniqid());
 
         $this->assertFalse($files);
 
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false);
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A", false);
 
 
         $this->assertIsArray($files);
@@ -62,7 +62,7 @@ class DirectoriesScanHelperTest extends BaseTestCase
         $this->assertTrue(in_array(static::FILE_COMP_A_TRIGGER_C_LOCAL, $files));
         $this->assertTrue(in_array(static::FILE_COMP_A_LOCAL, $files));
 
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A");
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A");
 
         $this->assertIsArray($files);
         $this->assertCount(3, $files);
@@ -70,7 +70,7 @@ class DirectoriesScanHelperTest extends BaseTestCase
         $this->assertTrue(in_array(static::FILE_A_TRIGGER_C_ABSOLUTE, $files));
         $this->assertTrue(in_array(static::FILE_COMP_A_ABSOLUTE, $files));
 
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 1, false);
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A", false, 1, false);
 
         $this->assertIsArray($files);
         $this->assertCount(2, $files);
@@ -78,14 +78,14 @@ class DirectoriesScanHelperTest extends BaseTestCase
         $this->assertTrue(in_array(static::FILE_COMP_A_LOCAL, $files));
 
         try {
-            $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 1, true);
+            $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A", false, 1, true);
         } catch (MaxDeepOverflowException $ex) {
 
         }
 
         $this->assertInstanceOf(MaxDeepOverflowException::class, $ex);
 
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 100, true, false);
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A", false, 100, true, false);
 
         $this->assertIsArray($files);
         $this->assertCount(4, $files);

@@ -3,8 +3,9 @@
 namespace Brezgalov\ComponentsAnalyser\UnitTests\Analyser;
 
 use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\ComponentsAnalyser;
-use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\AnalysisResult;
+use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\AnalysisDataPhpRepository;
 use Brezgalov\ComponentsAnalyser\ComponentsPickerSimple\ComponentsPickerSimple;
+use Brezgalov\ComponentsAnalyser\FileParserPhp8\FileParserPhp8;
 use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
 
 /**
@@ -27,16 +28,18 @@ class AnalyserTest extends BaseTestCase
     {
         $picker = new ComponentsPickerSimple();
 
-        $analyser = new ComponentsAnalyser($picker);
+        $anyPossibleParser = new FileParserPhp8();
+
+        $analyser = new ComponentsAnalyser($picker, $anyPossibleParser);
         $this->assertEquals([], $analyser->getScannedDirectories());
 
-        $analyser = new ComponentsAnalyser($picker, __DIR__);
+        $analyser = new ComponentsAnalyser($picker, $anyPossibleParser, __DIR__);
         $this->assertEquals([__DIR__], $analyser->getScannedDirectories());
 
-        $analyser = new ComponentsAnalyser($picker, [__DIR__, __DIR__]);
+        $analyser = new ComponentsAnalyser($picker, $anyPossibleParser, [__DIR__, __DIR__]);
         $this->assertEquals([__DIR__], $analyser->getScannedDirectories());
 
-        $analyser = new ComponentsAnalyser($picker);
+        $analyser = new ComponentsAnalyser($picker, $anyPossibleParser);
         $analyser->addScanDir(__DIR__);
         $analyser->addScanDirs([
             __DIR__ . '/../',
@@ -54,14 +57,14 @@ class AnalyserTest extends BaseTestCase
         $directoryMissing = __DIR__ . '/' . uniqid();
 
         try {
-            $analyser = new ComponentsAnalyser($picker, $directoryMissing);
+            $analyser = new ComponentsAnalyser($picker, $anyPossibleParser, $directoryMissing);
         } catch (\Exception $ex1) {
 
         }
 
         $this->assertNotEmpty($ex1);
 
-        $analyser = new ComponentsAnalyser($picker);
+        $analyser = new ComponentsAnalyser($picker, $anyPossibleParser);
         try {
             $analyser->addScanDir($directoryMissing);
         } catch (\Exception $ex2) {
@@ -71,7 +74,7 @@ class AnalyserTest extends BaseTestCase
         $this->assertNotEmpty($ex2);
 
         try {
-            $analyser = new ComponentsAnalyser($picker, true);
+            $analyser = new ComponentsAnalyser($picker, $anyPossibleParser, true);
         } catch (\Exception $ex3) {
 
         }
@@ -80,17 +83,20 @@ class AnalyserTest extends BaseTestCase
     }
 
     /**
+     * @requires PHP >= 8.0
+     *
      * @covers ::scanComponents
      */
-    public function testAnalysis()
+    public function testAnalysisPhp8()
     {
         $picker = new ComponentsPickerSimple();
+        $parser = new FileParserPhp8();
 
-        $analyser = new ComponentsAnalyser($picker, TEST_DIR . '/ExampleComponents');
+        $analyser = new ComponentsAnalyser($picker, $parser, TEST_DIR . '/ExampleComponentsNested');
 
         $result = $analyser->scanComponents();
 
-        $this->assertInstanceOf(AnalysisResult::class, $result);
+        $this->assertInstanceOf(AnalysisDataPhpRepository::class, $result);
         $this->assertEquals(1, 0);
     }
 }

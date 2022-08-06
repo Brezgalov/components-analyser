@@ -1,8 +1,8 @@
 <?php
 
-namespace ExampleComponents\A;
+namespace ExampleComponentsCircled\A;
 
-use ExampleComponents\B\CompB;
+use ExampleComponentsCircled\B\CompB;
 
 class CompA
 {

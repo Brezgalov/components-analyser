@@ -44,7 +44,7 @@ class ComponentsPickerSimpleTest extends BaseTestCase
 
         rmdir($emptyFolder);
 
-        $components = $simplePicker->getComponentsList(TEST_DIR . '/ExampleComponents');
+        $components = $simplePicker->getComponentsList(TEST_DIR . '/ExampleComponentsCircled');
 
         $this->assertCount(3, $components);
 
