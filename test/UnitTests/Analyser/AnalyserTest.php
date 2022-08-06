@@ -97,6 +97,8 @@ class AnalyserTest extends BaseTestCase
         $result = $analyser->scanComponents();
 
         $this->assertInstanceOf(AnalysisDataPhpRepository::class, $result);
+
+        // @todo: check results
         $this->assertEquals(1, 0);
     }
 }

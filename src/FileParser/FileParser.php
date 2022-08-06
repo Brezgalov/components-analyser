@@ -2,6 +2,10 @@
 
 namespace Brezgalov\ComponentsAnalyser\FileParser;
 
+// @todo: teach parsers to understand "require" directive
+// @todo: teach parsers to search for fully qualified names inside class body
+// @todo: teach parsers to determine abstract classes
+// @todo: teach parsers to determine interfaces
 abstract class FileParser implements IFileParser
 {
     /**
