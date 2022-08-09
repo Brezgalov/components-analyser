@@ -19,4 +19,9 @@ interface IFileParseResult
      * @return string
      */
     public function getFullClassName();
+
+    /**
+     * @return bool
+     */
+    public function isClass();
 }

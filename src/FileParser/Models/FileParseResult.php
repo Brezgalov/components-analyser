@@ -47,4 +47,12 @@ class FileParseResult implements IFileParseResult
     {
         return $this->className ? "{$this->namespace}\\{$this->className}" : null;
     }
+
+    /**
+     * @return bool
+     */
+    public function isClass()
+    {
+        return (bool)$this->className;
+    }
 }

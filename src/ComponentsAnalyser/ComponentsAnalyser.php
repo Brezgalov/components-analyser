@@ -91,16 +91,16 @@ class ComponentsAnalyser
                 foreach ($component->getFilesList() as $filePath) {
                     $fileParseResult = $this->fileParser->parseFile($filePath);
 
-                    $dataRepository->addComponentOwnClass(
-                        $component->getRootDirectoryPath(),
-                        $fileParseResult->getFullClassName()
-                    );
+                    if (!$fileParseResult->isClass()) {
+                        continue;
+                    }
 
                     $dataRepository->addClassFile(
                         $fileParseResult->getFullClassName(),
                         $filePath
                     );
 
+                    // current class uses every dependency class
                     foreach ($fileParseResult->getUseDependencies() as $dependencyClass) {
                         $dataRepository->addComponentDependency(
                             $component->getRootDirectoryPath(),

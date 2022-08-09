@@ -45,6 +45,8 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     protected $dependencyClasses = [];
 
     /**
+     * Adds component directory and name to memory
+     *
      * @param string $componentPath
      * @param string $componentName
      */
@@ -54,6 +56,8 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * Binds component own class
+     *
      * @param string $componentPath
      * @param string $classFullName
      */
@@ -64,9 +68,15 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
 
         // bind map class => component
         $this->classesOwnedByComponents[$classFullName] = $componentPath;
+
+        if (!array_key_exists($componentPath, $this->componentsDirToNamesMap)) {
+            $this->componentsDirToNamesMap[$componentPath] = null;
+        }
     }
 
     /**
+     * Binds class to its file
+     *
      * @param string $classFullName
      * @param string $filePath
      */
@@ -77,12 +87,20 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * Component <$componentPath> has class <$ownClassName> that uses <$dependencyClassName>
+     *
      * @param string $componentPath
-     * @param string $className
+     * @param string $ownClassName
      * @param string $dependencyClassName
      */
-    public function addComponentDependency(string $componentPath, string $className, string $dependencyClassName)
+    public function addComponentDependency(string $componentPath, string $ownClassName, string $dependencyClassName)
     {
+        // bind own class to component
+        $this->addComponentOwnClass(
+            $componentPath,
+            $ownClassName
+        );
+
         // bind map component => dependency class
         $this->componentsDependencies[$componentPath][$dependencyClassName] = true;
 
@@ -90,13 +108,14 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
         $this->dependencyComponents[$dependencyClassName][$componentPath] = true;
 
         // bind map component file => dependency class
-        $this->classDependencies[$className][$dependencyClassName] = true;
+        $this->classDependencies[$ownClassName][$dependencyClassName] = true;
 
         // bind map dependency class => component file
-        $this->dependencyClasses[$dependencyClassName][$className] = true;
+        $this->dependencyClasses[$dependencyClassName][$ownClassName] = true;
     }
 
     /**
+     * List all components dirs
      * @return array
      */
     public function getComponentsDirsList()
@@ -105,6 +124,8 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * Find component name by its directory
+     *
      * @param string $componentDir
      * @return string|null
      */
@@ -114,6 +135,8 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * Find class file path by its name
+     *
      * @param string $className
      * @return string|null
      */
@@ -123,6 +146,8 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * What classes belong to component
+     *
      * @param string $compDir
      * @return string[]|null
      */
@@ -134,8 +159,10 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * Get component that class belongs to
+     *
      * @param string $className
-     * @return mixed|null
+     * @return string|null
      */
     public function getClassComponent(string $className)
     {
@@ -143,10 +170,12 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * Get list of all classes that use this component
+     *
      * @param string $compDir
      * @return string[]|null
      */
-    public function getComponentDependenciesAll(string $compDir)
+    public function getComponentDependenciesClassNamesAll(string $compDir)
     {
         $dependencies = $this->componentsDependencies[$compDir] ?? null;
 
@@ -154,10 +183,12 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * What classes does component use
+     *
      * @param string $compDir
      * @return string[]|null
      */
-    public function getComponentDependenciesExternal(string $compDir)
+    public function getComponentExternalClassDependencies(string $compDir)
     {
         $dependencies = $this->componentsDependencies[$compDir] ?? [];
         $ownClasses = $this->componentsOwnClasses[$compDir] ?? [];
@@ -166,14 +197,16 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
             unset($dependencies[$className]);
         }
 
-        return array_values($dependencies);
+        return array_keys($dependencies);
     }
 
     /**
+     * What components use this class
+     *
      * @param string $dependencyClassName
      * @return string[]|null
      */
-    public function getDependencyComponents(string $dependencyClassName)
+    public function getClassDependantComponents(string $dependencyClassName)
     {
         $components = $this->dependencyComponents[$dependencyClassName] ?? null;
 
@@ -181,6 +214,8 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * What other classes does this class use
+     *
      * @param string $className
      * @return string[]|null
      */
@@ -192,10 +227,25 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
     }
 
     /**
+     * What classes use $dependencyClass
+     *
+     * @param string $dependencyClass
+     * @return string[]|null
+     */
+    public function getClassesDependantTo(string $dependencyClass)
+    {
+        $classes = $this->dependencyClasses[$dependencyClass] ?? null;
+
+        return $classes ? array_keys($classes) : null;
+    }
+
+    /**
+     * What classes does class use
+     *
      * @param string $className
      * @return string[]|mixed
      */
-    public function getClassExternalDependencies(string $className)
+    public function getClassExternalClassDependencies(string $className)
     {
         $classComponent = $this->getClassComponent($className);
         if (empty($classComponent)) {
@@ -210,17 +260,8 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
             unset($classDependencies[$className]);
         }
 
-        return array_values($classDependencies);
+        return array_keys($classDependencies);
     }
 
-    /**
-     * @param string $dependencyClass
-     * @return string[]|null
-     */
-    public function getDependencyClasses(string $dependencyClass)
-    {
-        $classes = $this->dependencyClasses[$dependencyClass] ?? null;
-
-        return $classes ? array_keys($classes) : null;
-    }
+    //@todo: implement ::getComponentExternalComponentDependencies
 }
