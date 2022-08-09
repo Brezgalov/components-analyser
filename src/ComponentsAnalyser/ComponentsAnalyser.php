@@ -3,6 +3,7 @@
 namespace Brezgalov\ComponentsAnalyser\ComponentsAnalyser;
 
 use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\AnalysisDataPhpRepository;
+use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\DirectoryAnalysisSettings;
 use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\IAnalysisDataRepository;
 use Brezgalov\ComponentsAnalyser\ComponentsPicker\IComponentsPicker;
 use Brezgalov\ComponentsAnalyser\FileParser\IFileParser;
@@ -10,18 +11,13 @@ use Brezgalov\ComponentsAnalyser\FileParser\IFileParser;
 class ComponentsAnalyser
 {
     /**
-     * Unique File paths to scanned directories
-     * Format: <path> => true - this allows easy unification on new directory attachment
+     * settings with component picker and unique File paths to scanned directories
+     * Format: <path> => <settings object> - this allows easy unification on new directory attachment
      *
      * /home/user/myDir and ~/myDir equivalence not caught yet. Absolut paths expected
-     * @var string[]
+     * @var DirectoryAnalysisSettings[]
      */
-    protected $scanDirectories = [];
-
-    /**
-     * @var IComponentsPicker
-     */
-    protected $componentsPicker;
+    protected $directoriesSettings = [];
 
     /**
      * @var IFileParser
@@ -34,67 +30,40 @@ class ComponentsAnalyser
     protected $dataRepository;
 
     /**
-     * AnalyserSetup constructor.
-     * @param IComponentsPicker $picker
+     * ComponentsAnalyser constructor.
+     * @param DirectoryAnalysisSettings[] $dirSettings
      * @param IFileParser $fileParser
-     * @param array|string $dir - Full path / Array of full paths to scanned directories
-     * @param IAnalysisDataRepository $dataRepository
+     * @param IAnalysisDataRepository|null $dataRepository
      * @throws \Exception
      */
-    public function __construct(IComponentsPicker $picker, IFileParser $fileParser, $dir = null, IAnalysisDataRepository $dataRepository = null)
+    public function __construct(array $dirSettings, IFileParser $fileParser, IAnalysisDataRepository $dataRepository = null)
     {
-        if (!empty($dir)) {
-            if (is_string($dir)) {
-                $this->addScanDir($dir);
-            } elseif (is_array($dir)) {
-                $this->addScanDirs($dir);
-            } else {
-                throw new \Exception("\$dir should be either string or array");
-            }
+        foreach ($dirSettings as $settings) {
+            $this->addDirectorySettings($settings);
         }
 
-        $this->componentsPicker = $picker;
         $this->fileParser = $fileParser;
 
         $this->dataRepository = $dataRepository ?: new AnalysisDataPhpRepository();
     }
 
     /**
-     * @return string[]
-     */
-    public function getScannedDirectories()
-    {
-        return array_keys($this->scanDirectories);
-    }
-
-    /**
-     * @param string $dir
+     * @param DirectoryAnalysisSettings $settings
      * @return $this
-     * @throws \Exception
      */
-    public function addScanDir(string $dir)
+    public function addDirectorySettings(DirectoryAnalysisSettings $settings)
     {
-        if (!is_dir($dir)) {
-            throw new \Exception("{$dir} is not a valid directory");
-        }
-
-        $this->scanDirectories[$dir] = true;
+        $this->directoriesSettings[$settings->getDirectory()] = clone $settings;
 
         return $this;
     }
 
     /**
-     * @param array $directories
-     * @return $this
-     * @throws \Exception
+     * @return DirectoryAnalysisSettings[]
      */
-    public function addScanDirs(array $directories)
+    public function getDirectoriesSettings()
     {
-        foreach ($directories as $directory) {
-            $this->addScanDir($directory);
-        }
-
-        return $this;
+        return array_values($this->directoriesSettings);
     }
 
     /**
@@ -104,11 +73,14 @@ class ComponentsAnalyser
     {
         $dataRepository = clone $this->dataRepository;
 
-        $componentsDirs = $this->getScannedDirectories();
+        $settings = $this->getDirectoriesSettings();
 
-        foreach ($componentsDirs as $componentsDir) {
+        foreach ($settings as $directorySettings) {
+            $dir = $directorySettings->getDirectory();
+            $componentsPicker = $directorySettings->getPicker();
+
             // get components files list
-            $components = $this->componentsPicker->getComponentsList($componentsDir);
+            $components = $componentsPicker->getComponentsList($dir);
 
             foreach ($components as $component) {
                 $dataRepository->addComponentDirToMap(
