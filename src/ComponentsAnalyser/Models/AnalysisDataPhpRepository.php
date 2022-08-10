@@ -243,7 +243,7 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
      * What classes does class use
      *
      * @param string $className
-     * @return string[]|mixed
+     * @return string[]
      */
     public function getClassExternalClassDependencies(string $className)
     {
@@ -263,5 +263,25 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
         return array_keys($classDependencies);
     }
 
-    //@todo: implement ::getComponentExternalComponentDependencies
+    /**
+     * What components use this component
+     *
+     * @param string $compDir
+     * @return string[]
+     */
+    public function getComponentExternalComponentDependencies(string $compDir)
+    {
+        $dependencyClasses = $this->getComponentExternalClassDependencies($compDir);
+
+        $components = [];
+        foreach ($dependencyClasses as $dependencyClass) {
+            $dependencyComponent = $this->getClassComponent($dependencyClass);
+
+            if ($dependencyComponent !== $compDir) {
+                $components[$dependencyComponent] = true;
+            }
+        }
+
+        return array_keys($components);
+    }
 }
