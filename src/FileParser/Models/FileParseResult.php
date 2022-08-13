@@ -7,22 +7,69 @@ class FileParseResult implements IFileParseResult
     /**
      * @var string|null
      */
-    public $error;
+    protected $error;
 
     /**
      * @var string[]
      */
-    public $useClasses = [];
+    protected $useClasses = [];
 
     /**
      * @var string
      */
-    public $namespace;
+    protected $namespace;
 
     /**
      * @var string
      */
-    public $className;
+    protected $className;
+
+    /**
+     * @var bool
+     */
+    protected $isClass = false;
+
+    /**
+     * @param string $val
+     */
+    public function setClassName(string $val)
+    {
+        $this->className = $val;
+    }
+
+    /**
+     * @param string $val
+     */
+    public function setNamespace(string $val)
+    {
+        $this->namespace = $val;
+    }
+
+    /**
+     * @param bool $val
+     */
+    public function setIsClass(bool $val)
+    {
+        $this->isClass = $val;
+    }
+
+    /**
+     * @param string $error
+     */
+    public function setError(string $error)
+    {
+        $this->error = $error;
+    }
+
+    public function setIsAbstract(bool $val)
+    {
+        // TODO: Implement setIsAbstract() method.
+    }
+
+    public function setIsInterface(bool $val)
+    {
+        // TODO: Implement setIsInterface() method.
+    }
 
     /**
      * @return string[]
@@ -43,6 +90,22 @@ class FileParseResult implements IFileParseResult
     /**
      * @return string
      */
+    public function getClassName()
+    {
+        return $this->className;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
+     * @return string
+     */
     public function getFullClassName()
     {
         return $this->className ? "{$this->namespace}\\{$this->className}" : null;
@@ -53,6 +116,6 @@ class FileParseResult implements IFileParseResult
      */
     public function isClass()
     {
-        return (bool)$this->className;
+        return $this->isClass;
     }
 }

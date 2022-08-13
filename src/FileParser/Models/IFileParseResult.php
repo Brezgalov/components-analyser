@@ -5,6 +5,42 @@ namespace Brezgalov\ComponentsAnalyser\FileParser\Models;
 interface IFileParseResult
 {
     /**
+     * @param string $val
+     */
+    public function setClassName(string $val);
+
+    /**
+     * @param string $val
+     */
+    public function setNamespace(string $val);
+
+    /**
+     * @param string $dependency
+     */
+    public function addUseDependency(string $dependency);
+
+    /**
+     * @param string $error
+     */
+    public function setError(string $error);
+
+    /**
+     * @param bool $val
+     */
+    public function setIsClass(bool $val);
+
+    /**
+     * @param bool $val
+     */
+    public function setIsAbstract(bool $val);
+
+    /**
+     * @param bool $val
+     * @return mixed
+     */
+    public function setIsInterface(bool $val);
+
+    /**
      * returns classes from use statements
      * @return string[]
      */
@@ -14,6 +50,16 @@ interface IFileParseResult
      * @return string|null
      */
     public function getError();
+
+    /**
+     * @return string
+     */
+    public function getNamespace();
+
+    /**
+     * @return string
+     */
+    public function getClassName();
 
     /**
      * @return string

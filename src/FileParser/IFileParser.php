@@ -2,6 +2,7 @@
 
 namespace Brezgalov\ComponentsAnalyser\FileParser;
 
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ICodeScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\Models\IFileParseResult;
 
 interface IFileParser
@@ -11,4 +12,9 @@ interface IFileParser
      * @return IFileParseResult
      */
     public function parseFile(string $filePath);
+
+    /**
+     * @return ICodeScanner[]
+     */
+    public function getCodeScanners();
 }
