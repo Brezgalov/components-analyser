@@ -70,7 +70,7 @@ class AnalyserTest extends BaseTestCase
         $simplePicker = new ComponentsPickerSimple();
 
         $settings = [
-            new DirectoryAnalysisSettings(TEST_DIR . '/ExampleComponentsNested', $simplePicker),
+            new DirectoryAnalysisSettings(TEST_DIR . '/ExampleComponents', $simplePicker),
         ];
 
         $parser = new FileParserPhp8();

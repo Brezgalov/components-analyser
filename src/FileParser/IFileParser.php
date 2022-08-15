@@ -12,9 +12,4 @@ interface IFileParser
      * @return IFileParseResult
      */
     public function parseFile(string $filePath);
-
-    /**
-     * @return ICodeScanner[]
-     */
-    public function getCodeScanners();
 }

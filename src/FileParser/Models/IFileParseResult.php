@@ -36,7 +36,6 @@ interface IFileParseResult
 
     /**
      * @param bool $val
-     * @return mixed
      */
     public function setIsInterface(bool $val);
 
@@ -69,5 +68,15 @@ interface IFileParseResult
     /**
      * @return bool
      */
-    public function isClass();
+    public function getIsClass();
+
+    /**
+     * @return bool
+     */
+    public function getIsAbstract();
+
+    /**
+     * @return bool
+     */
+    public function getIsInterface();
 }

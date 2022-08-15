@@ -30,6 +30,16 @@ class FileParseResult implements IFileParseResult
     protected $isClass = false;
 
     /**
+     * @var bool
+     */
+    protected $isAbstract = false;
+
+    /**
+     * @var bool
+     */
+    protected $isInterface = false;
+
+    /**
      * @param string $val
      */
     public function setClassName(string $val)
@@ -61,14 +71,28 @@ class FileParseResult implements IFileParseResult
         $this->error = $error;
     }
 
+    /**
+     * @param bool $val
+     */
     public function setIsAbstract(bool $val)
     {
-        // TODO: Implement setIsAbstract() method.
+        $this->isAbstract = $val;
     }
 
+    /**
+     * @param bool $val
+     */
     public function setIsInterface(bool $val)
     {
-        // TODO: Implement setIsInterface() method.
+        $this->isInterface = $val;
+    }
+
+    /**
+     * @param string $dependency
+     */
+    public function addUseDependency(string $dependency)
+    {
+        $this->useClasses[$dependency] = $dependency;
     }
 
     /**
@@ -76,7 +100,7 @@ class FileParseResult implements IFileParseResult
      */
     public function getUseDependencies()
     {
-        return $this->useClasses;
+        return array_values($this->useClasses);
     }
 
     /**
@@ -114,8 +138,24 @@ class FileParseResult implements IFileParseResult
     /**
      * @return bool
      */
-    public function isClass()
+    public function getIsClass()
     {
         return $this->isClass;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsAbstract()
+    {
+        return $this->isAbstract;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsInterface()
+    {
+        return $this->isInterface;
     }
 }

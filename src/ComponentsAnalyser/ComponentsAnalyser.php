@@ -91,7 +91,7 @@ class ComponentsAnalyser
                 foreach ($component->getFilesList() as $filePath) {
                     $fileParseResult = $this->fileParser->parseFile($filePath);
 
-                    if (!$fileParseResult->isClass()) {
+                    if (!$fileParseResult->getIsClass()) {
                         continue;
                     }
 

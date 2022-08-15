@@ -28,7 +28,7 @@ abstract class FileParser implements IFileParser
 
         $file = @file_get_contents($filePath);
         if ($file === false) {
-            $result->error = "File \"{$filePath}\" not found or unavailable";
+            $result->setError("File \"{$filePath}\" not found or unavailable");
             return $result;
         }
 

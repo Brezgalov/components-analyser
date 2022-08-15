@@ -14,6 +14,7 @@ use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
 class FileParseResultTest extends BaseTestCase
 {
     /**
+     * @covers ::addUseDependency
      * @covers ::getUseDependencies
      */
     public function testDependencies()
@@ -24,31 +25,69 @@ class FileParseResultTest extends BaseTestCase
         ];
 
         $result = new FileParseResult();
-        $result->useClasses = $array;
+        $result->addUseDependency('213');
+        $result->addUseDependency('2312');
+
+        $this->assertEquals($array, $result->getUseDependencies());
+
+        $result->addUseDependency('213');
+        $result->addUseDependency('2312');
 
         $this->assertEquals($array, $result->getUseDependencies());
     }
 
     /**
+     * @covers ::setError
      * @covers ::getError
      */
     public function testError()
     {
         $result = new FileParseResult();
-        $result->error = '123';
+        $result->setError('123');
 
         $this->assertEquals('123', $result->getError());
     }
 
     /**
+     * @covers ::setNamespace
+     * @covers ::setClassName
+     * @covers ::getClassName
+     * @covers ::getNamespace
      * @covers ::getFullClassName
      */
     public function testClassName()
     {
         $result = new FileParseResult();
-        $result->namespace = 'app\test';
-        $result->className = 'MyTestClass';
+        $result->setNamespace('app\test');
+        $result->setClassName('MyTestClass');
 
+        $this->assertEquals('app\test', $result->getNamespace());
+        $this->assertEquals('MyTestClass', $result->getClassName());
         $this->assertEquals('app\test\MyTestClass', $result->getFullClassName());
+    }
+
+    /**
+     * @covers ::setIsClass
+     * @covers ::setIsAbstract
+     * @covers ::setIsInterface
+     * @covers ::getIsClass
+     * @covers ::getIsAbstract
+     * @covers ::getIsInterface
+     */
+    public function testClassProperties()
+    {
+        $result = new FileParseResult();
+
+        $this->assertFalse($result->getIsClass());
+        $this->assertFalse($result->getIsAbstract());
+        $this->assertFalse($result->getIsInterface());
+
+        $result->setIsClass(true);
+        $result->setIsAbstract(true);
+        $result->setIsInterface(true);
+
+        $this->assertTrue($result->getIsClass());
+        $this->assertTrue($result->getIsAbstract());
+        $this->assertTrue($result->getIsInterface());
     }
 }

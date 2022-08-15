@@ -21,14 +21,15 @@ class DirectoriesScanHelperTest extends BaseTestCase
     {
         $helper = new DirectoriesScanHelper();
 
-        $contents = $helper->scanDirContents(TEST_DIR . "/ExampleComponentsCircled");
+        $contents = $helper->scanDirContents(TEST_DIR . "/ExampleComponents");
 
         $this->assertIsArray($contents);
-        $this->assertCount(3, $contents);
+        $this->assertCount(4, $contents);
 
         $this->assertTrue(in_array("A", $contents));
         $this->assertTrue(in_array("B", $contents));
         $this->assertTrue(in_array("C", $contents));
+        $this->assertTrue(in_array("D", $contents));
 
         $contents = $helper->scanDirContents(TEST_DIR . "/" . uniqid());
 
@@ -49,46 +50,48 @@ class DirectoriesScanHelperTest extends BaseTestCase
     {
         $helper = new DirectoriesScanHelper();
 
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/" . uniqid());
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/" . uniqid());
 
         $this->assertFalse($files);
 
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A", false);
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false);
 
+        $this->assertIsArray($files);
+        $this->assertCount(4, $files);
+        $this->assertTrue(in_array('CompA.php', $files));
+        $this->assertTrue(in_array('Classes/Class1.php', $files));
+        $this->assertTrue(in_array('Classes/Interface1.php', $files));
+        $this->assertTrue(in_array('Classes/Base/BaseClass1.php', $files));
+
+        $files = $helper->getDirectoryFiles(TEST_DIR . '/ExampleComponents/A');
+
+        $this->assertIsArray($files);
+        $this->assertCount(4, $files);
+        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/CompA.php', $files));
+        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Class1.php', $files));
+        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Interface1.php', $files));
+        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Base/BaseClass1.php', $files));
+
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 1, false);
 
         $this->assertIsArray($files);
         $this->assertCount(3, $files);
-        $this->assertTrue(in_array(static::FILE_COMP_A_TRIGGER_B_LOCAL, $files));
-        $this->assertTrue(in_array(static::FILE_COMP_A_TRIGGER_C_LOCAL, $files));
-        $this->assertTrue(in_array(static::FILE_COMP_A_LOCAL, $files));
-
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A");
-
-        $this->assertIsArray($files);
-        $this->assertCount(3, $files);
-        $this->assertTrue(in_array(static::FILE_A_TRIGGER_B_ABSOLUTE, $files));
-        $this->assertTrue(in_array(static::FILE_A_TRIGGER_C_ABSOLUTE, $files));
-        $this->assertTrue(in_array(static::FILE_COMP_A_ABSOLUTE, $files));
-
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A", false, 1, false);
-
-        $this->assertIsArray($files);
-        $this->assertCount(2, $files);
-        $this->assertTrue(in_array(static::FILE_COMP_A_TRIGGER_C_LOCAL, $files));
-        $this->assertTrue(in_array(static::FILE_COMP_A_LOCAL, $files));
+        $this->assertTrue(in_array('CompA.php', $files));
+        $this->assertTrue(in_array('Classes/Class1.php', $files));
+        $this->assertTrue(in_array('Classes/Interface1.php', $files));
 
         try {
-            $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A", false, 1, true);
+            $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 1, true);
         } catch (MaxDeepOverflowException $ex) {
 
         }
 
         $this->assertInstanceOf(MaxDeepOverflowException::class, $ex);
 
-        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponentsCircled/A", false, 100, true, false);
+        $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 100, true, false);
 
         $this->assertIsArray($files);
-        $this->assertCount(4, $files);
-        $this->assertTrue(in_array(static::FILE_COMP_A_CONFIG_JSON_LOCAL, $files));
+        $this->assertCount(5, $files);
+        $this->assertTrue(in_array('config.json', $files));
     }
 }
