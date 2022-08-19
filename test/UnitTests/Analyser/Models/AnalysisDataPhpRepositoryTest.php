@@ -145,6 +145,7 @@ class AnalysisDataPhpRepositoryTest extends BaseTestCase
      * @covers ::getClassesDependantTo
      * @covers ::getComponentExternalClassDependencies
      * @covers ::getComponentExternalComponentDependencies
+     * @covers ::getClassExternalClassDependencies
      */
     public function testDependencies()
     {
@@ -277,6 +278,9 @@ class AnalysisDataPhpRepositoryTest extends BaseTestCase
         $this->assertNotEmpty($b2ExternalClassDependencies);
         $this->assertCount(1, $b2ExternalClassDependencies);
         $this->assertEquals('AClass2', $b2ExternalClassDependencies[0]);
+
+        // if class not stored - dependencies are empty
+        $this->assertEmpty($dataRepository->getClassExternalClassDependencies('ClassNotExist'));
 
         // comp A uses nothing
         $aCompDependenciesComponents = $dataRepository->getComponentExternalComponentDependencies('/path/A');
