@@ -2,7 +2,7 @@
 
 namespace Brezgalov\ComponentsAnalyser\FileParser;
 
-use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ICodeScanner;
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ITokenScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\Models\IFileParseResult;
 
 interface IFileParser

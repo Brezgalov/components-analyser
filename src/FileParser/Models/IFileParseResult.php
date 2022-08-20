@@ -2,42 +2,62 @@
 
 namespace Brezgalov\ComponentsAnalyser\FileParser\Models;
 
+// @todo: interface segregation required
 interface IFileParseResult
 {
     /**
-     * @param string $val
+     * @param string|null $val
+     * @return IFileParseResult
      */
-    public function setClassName(string $val);
+    public function setClassName(string $val = null);
 
     /**
-     * @param string $val
+     * @param string|null $val
+     * @return IFileParseResult
      */
-    public function setNamespace(string $val);
+    public function setNamespace(string $val = null);
 
     /**
-     * @param string $dependency
+     * @param string|null $extends
+     * @return $this
      */
-    public function addUseDependency(string $dependency);
+    public function setExtends(string $extends = null);
 
     /**
-     * @param string $error
+     * @param string|null $implements
+     * @return $this
      */
-    public function setError(string $error);
+    public function setImplements(string $implements = null);
+
+    /**
+     * @param string|null $error
+     * @return mixed
+     */
+    public function setError(string $error = null);
 
     /**
      * @param bool $val
+     * @return IFileParseResult
      */
     public function setIsClass(bool $val);
 
     /**
      * @param bool $val
+     * @return IFileParseResult
      */
     public function setIsAbstract(bool $val);
 
     /**
      * @param bool $val
+     * @return IFileParseResult
      */
     public function setIsInterface(bool $val);
+
+    /**
+     * @param string $dependency
+     * @return IFileParseResult
+     */
+    public function addUseDependency(string $dependency);
 
     /**
      * returns classes from use statements
@@ -54,6 +74,16 @@ interface IFileParseResult
      * @return string
      */
     public function getNamespace();
+
+    /**
+     * @return string
+     */
+    public function getExtends();
+
+    /**
+     * @return string
+     */
+    public function getImplements();
 
     /**
      * @return string

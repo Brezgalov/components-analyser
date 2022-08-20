@@ -2,14 +2,8 @@
 
 namespace Brezgalov\ComponentsAnalyser\FileParser\CodeScaners;
 
-use Brezgalov\ComponentsAnalyser\FileParser\Models\IFileParseResult;
-
-interface ICodeScanner
+interface ITokenScanner extends IScanner
 {
-    const DIRECTIVE_IN_PROGRESS = 0;
-    const DIRECTIVE_DONE = 1;
-    const DIRECTIVE_ISSUE = 10;
-
     /**
      * Accepts token_get_all result item in loop to get info needed
      * Returns DIRECTIVE constants. Send DIE to command IFileParser
@@ -22,12 +16,4 @@ interface ICodeScanner
      * @return integer
      */
     public function passToken(int $tokenCode, string $tokenName, string $tokenVal, int $fileStrNumber);
-
-    /**
-     * Stores parse results to dto
-     *
-     * @param IFileParseResult $fileParseResult
-     * @return IFileParseResult
-     */
-    public function storeScanResults(IFileParseResult $fileParseResult);
 }

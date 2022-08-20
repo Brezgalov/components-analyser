@@ -25,6 +25,16 @@ class FileParseResult implements IFileParseResult
     protected $className;
 
     /**
+     * @var string
+     */
+    protected $extends;
+
+    /**
+     * @var string
+     */
+    protected $implements;
+
+    /**
      * @var bool
      */
     protected $isClass = false;
@@ -40,59 +50,102 @@ class FileParseResult implements IFileParseResult
     protected $isInterface = false;
 
     /**
-     * @param string $val
+     * @param string|null $val
+     * @return IFileParseResult
      */
-    public function setClassName(string $val)
+    public function setClassName(string $val = null)
     {
         $this->className = $val;
+
+        return $this;
     }
 
     /**
-     * @param string $val
+     * @param string|null $val
+     * @return IFileParseResult
      */
-    public function setNamespace(string $val)
+    public function setNamespace(string $val = null)
     {
         $this->namespace = $val;
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $extends
+     * @return IFileParseResult
+     */
+    public function setExtends(string $extends = null)
+    {
+        $this->extends = $extends;
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $implements
+     * @return IFileParseResult
+     */
+    public function setImplements(string $implements = null)
+    {
+        $this->implements = $implements;
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $error
+     * @return IFileParseResult
+     */
+    public function setError(string $error = null)
+    {
+        $this->error = $error;
+
+        return $this;
     }
 
     /**
      * @param bool $val
+     * @return IFileParseResult
      */
     public function setIsClass(bool $val)
     {
         $this->isClass = $val;
-    }
 
-    /**
-     * @param string $error
-     */
-    public function setError(string $error)
-    {
-        $this->error = $error;
+        return $this;
     }
 
     /**
      * @param bool $val
+     * @return IFileParseResult
      */
     public function setIsAbstract(bool $val)
     {
         $this->isAbstract = $val;
+
+        return $this;
     }
 
     /**
      * @param bool $val
+     * @return IFileParseResult
      */
     public function setIsInterface(bool $val)
     {
         $this->isInterface = $val;
+
+        return $this;
     }
 
     /**
      * @param string $dependency
+     * @return IFileParseResult
      */
     public function addUseDependency(string $dependency)
     {
         $this->useClasses[$dependency] = $dependency;
+
+        return $this;
     }
 
     /**
@@ -125,6 +178,22 @@ class FileParseResult implements IFileParseResult
     public function getNamespace()
     {
         return $this->namespace;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtends()
+    {
+        return $this->extends;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImplements()
+    {
+        return $this->implements;
     }
 
     /**

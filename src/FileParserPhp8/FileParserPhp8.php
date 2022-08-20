@@ -2,8 +2,8 @@
 
 namespace Brezgalov\ComponentsAnalyser\FileParserPhp8;
 
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ClassScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\FileParser;
-use Brezgalov\ComponentsAnalyser\FileParser\Models\FileParseResult;
 
 class FileParserPhp8 extends FileParser
 {
@@ -13,7 +13,7 @@ class FileParserPhp8 extends FileParser
     public function getCodeScanners()
     {
         return [
-
+            new ClassScanner(),
         ];
     }
 }
