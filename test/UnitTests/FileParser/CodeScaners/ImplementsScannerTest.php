@@ -54,26 +54,9 @@ class ImplementsScannerTest extends BaseTestCase
      */
     public function testImplementsFullyQualified()
     {
-        $codeFile = TEST_DIR . '/ExampleComponents/A/Classes/Base/BaseClass1.php';
+        $tokens = $this->getTokens(TEST_DIR . '/ExampleComponents/A/Classes/Base/BaseClass1.php');
 
-        $this->assertTrue(is_file($codeFile));
-
-        $code = file_get_contents($codeFile);
-        $this->assertNotEmpty($code);
-
-        $tokens = token_get_all($code);
-        $this->assertNotEmpty($tokens);
-
-        $scanner = new ImplementsScanner();
-
-        foreach ($tokens as $tokenInfo) {
-            if (is_array($tokenInfo)) {
-                list($tokenCode, $tokenVal, $fileStrNumber) = $tokenInfo;
-                $tokenName = token_name($tokenCode);
-
-                $scanner->passToken($tokenCode, $tokenName, $tokenVal, $fileStrNumber);
-            }
-        }
+        $scanner = $this->scanTokens($tokens, new ImplementsScanner());
 
         $result = $scanner->storeScanResults(new FileParseResult());
 

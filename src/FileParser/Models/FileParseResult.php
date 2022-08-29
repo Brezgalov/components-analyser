@@ -15,6 +15,11 @@ class FileParseResult implements IFileParseResult
     protected $useClasses = [];
 
     /**
+     * @var array
+     */
+    protected $aliases = [];
+
+    /**
      * @var string
      */
     protected $namespace;
@@ -149,11 +154,31 @@ class FileParseResult implements IFileParseResult
     }
 
     /**
+     * @param string $alias
+     * @param string $value
+     * @return IFileParseResult
+     */
+    public function addAlias(string $alias, string $value)
+    {
+        $this->aliases[$alias] = $value;
+
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getUseDependencies()
     {
-        return array_values($this->useClasses);
+        $uses = array_values($this->useClasses);
+
+        foreach ($uses as &$dependency) {
+            if (array_key_exists($dependency, $this->aliases)) {
+                $dependency = $this->aliases[$dependency];
+            }
+        }
+
+        return $uses;
     }
 
     /**
@@ -185,7 +210,7 @@ class FileParseResult implements IFileParseResult
      */
     public function getExtends()
     {
-        return $this->extends;
+        return $this->aliases[$this->extends] ?? $this->extends;
     }
 
     /**

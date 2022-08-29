@@ -60,6 +60,13 @@ interface IFileParseResult
     public function addUseDependency(string $dependency);
 
     /**
+     * @param string $alias
+     * @param string $value
+     * @return IFileParseResult
+     */
+    public function addAlias(string $alias, string $value);
+
+    /**
      * returns classes from use statements
      * @return string[]
      */

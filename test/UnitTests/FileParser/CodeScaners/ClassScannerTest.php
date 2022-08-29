@@ -39,6 +39,8 @@ class ClassScannerTest extends BaseTestCase
                 $tokenName = token_name($tokenCode);
 
                 $resultDirective = $scanner->passToken($tokenCode, $tokenName, $tokenVal, $fileStrNumber);
+            } else {
+                $scanner->passString($tokenInfo);
             }
         }
 

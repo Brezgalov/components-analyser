@@ -4,12 +4,8 @@ namespace Brezgalov\ComponentsAnalyser\FileParser\CodeScaners;
 
 use Brezgalov\ComponentsAnalyser\FileParser\Models\IFileParseResult;
 
-class ClassScanner implements ITokenScanner
+class ClassScanner implements ITokenScanner, IStringScanner
 {
-    const TOKEN_STRING = "T_STRING";
-    const TOKEN_CLASS = "T_CLASS";
-    const TOKEN_IMPLEMENTS = "T_IMPLEMENTS";
-
     /**
      * @var bool
      */
@@ -26,6 +22,11 @@ class ClassScanner implements ITokenScanner
     protected $extendsScanner;
 
     /**
+     * @var UseScanner
+     */
+    protected $usesScanner;
+
+    /**
      * @var ITokenScanner
      */
     protected $implementsScanner;
@@ -40,13 +41,30 @@ class ClassScanner implements ITokenScanner
      */
     protected $implementsDone = false;
 
+    /**
+     * ClassScanner constructor.
+     * @param ITokenScanner|null $extendsScanner
+     * @param ITokenScanner|null $implementsScanner
+     * @param ITokenScanner|null $usesScanner
+     */
     public function __construct(
         ITokenScanner $extendsScanner = null,
         ITokenScanner $implementsScanner = null,
-        ITokenScanner $usesScanner = null
+        UseScanner $usesScanner = null
     ) {
         $this->extendsScanner = $extendsScanner ?: new ExtendsScanner();
         $this->implementsScanner = $implementsScanner ?: new ImplementsScanner();
+        $this->usesScanner = $usesScanner ?: new UseScanner();
+    }
+
+    protected function getTokenScannersMeta()
+    {
+        return [
+            // @todo: add class name scanner
+            // @todo: add namespace scanner
+            'extendsDone' => 'extendsScanner',
+            'implementsDone' => 'implementsScanner',
+        ];
     }
 
     /**
@@ -58,12 +76,12 @@ class ClassScanner implements ITokenScanner
      */
     public function passToken(int $tokenCode, string $tokenName, string $tokenVal, int $fileStrNumber)
     {
-        if ($tokenName === self::TOKEN_CLASS) {
+        if ($tokenName === IScanner::TOKEN_CLASS) {
             $this->isClass = true;
             return IScanner::DIRECTIVE_IN_PROGRESS;
         }
 
-        if (empty($this->className) && $this->isClass && $tokenName == self::TOKEN_STRING) {
+        if (empty($this->className) && $this->isClass && $tokenName == IScanner::TOKEN_STRING) {
             $this->className = $tokenVal;
             return IScanner::DIRECTIVE_IN_PROGRESS;
         }
@@ -80,7 +98,14 @@ class ClassScanner implements ITokenScanner
             $this->implementsDone = $res === IScanner::DIRECTIVE_DONE;
         }
 
+        $this->usesScanner->passToken($tokenCode, $tokenName, $tokenVal, $fileStrNumber);
+
         return IScanner::DIRECTIVE_IN_PROGRESS;
+    }
+
+    public function passString(string $string)
+    {
+        $this->usesScanner->passString($string);
     }
 
     /**
@@ -91,6 +116,7 @@ class ClassScanner implements ITokenScanner
     {
         $fileParseResult = $this->extendsScanner->storeScanResults($fileParseResult);
         $fileParseResult = $this->implementsScanner->storeScanResults($fileParseResult);
+        $fileParseResult = $this->usesScanner->storeScanResults($fileParseResult);
 
         return $fileParseResult
             ->setIsClass($this->isClass)
