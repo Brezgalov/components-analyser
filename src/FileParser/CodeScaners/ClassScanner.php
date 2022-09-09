@@ -7,14 +7,9 @@ use Brezgalov\ComponentsAnalyser\FileParser\Models\IFileParseResult;
 class ClassScanner implements ITokenScanner, IStringScanner
 {
     /**
-     * @var bool
+     * @var ITokenScanner
      */
-    protected $isClass = false;
-
-    /**
-     * @var string
-     */
-    protected $className;
+    protected $classNameScanner;
 
     /**
      * @var ITokenScanner
@@ -34,6 +29,11 @@ class ClassScanner implements ITokenScanner, IStringScanner
     /**
      * @var bool
      */
+    protected $classNameDone = false;
+
+    /**
+     * @var bool
+     */
     protected $extendsDone = false;
 
     /**
@@ -42,25 +42,33 @@ class ClassScanner implements ITokenScanner, IStringScanner
     protected $implementsDone = false;
 
     /**
+     * @var bool
+     */
+    protected $parseDone = false;
+
+    /**
      * ClassScanner constructor.
      * @param ITokenScanner|null $extendsScanner
      * @param ITokenScanner|null $implementsScanner
-     * @param ITokenScanner|null $usesScanner
+     * @param UseScanner|null $usesScanner
+     * @param ITokenScanner|null $classNameScanner
      */
     public function __construct(
         ITokenScanner $extendsScanner = null,
         ITokenScanner $implementsScanner = null,
-        UseScanner $usesScanner = null
+        UseScanner $usesScanner = null,
+        ITokenScanner $classNameScanner = null
     ) {
         $this->extendsScanner = $extendsScanner ?: new ExtendsScanner();
         $this->implementsScanner = $implementsScanner ?: new ImplementsScanner();
         $this->usesScanner = $usesScanner ?: new UseScanner();
+        $this->classNameScanner = $classNameScanner ?: new ClassNameScanner();
     }
 
     protected function getTokenScannersMeta()
     {
         return [
-            // @todo: add class name scanner
+            'classNameDone' => 'classNameScanner',
             // @todo: add namespace scanner
             'extendsDone' => 'extendsScanner',
             'implementsDone' => 'implementsScanner',
@@ -76,36 +84,36 @@ class ClassScanner implements ITokenScanner, IStringScanner
      */
     public function passToken(int $tokenCode, string $tokenName, string $tokenVal, int $fileStrNumber)
     {
-        if ($tokenName === IScanner::TOKEN_CLASS) {
-            $this->isClass = true;
-            return IScanner::DIRECTIVE_IN_PROGRESS;
-        }
-
-        if (empty($this->className) && $this->isClass && $tokenName == IScanner::TOKEN_STRING) {
-            $this->className = $tokenVal;
-            return IScanner::DIRECTIVE_IN_PROGRESS;
-        }
-
-        if (!$this->extendsDone) {
-            $res = $this->extendsScanner->passToken($tokenCode, $tokenName, $tokenVal, $fileStrNumber);
-
-            $this->extendsDone = $res === IScanner::DIRECTIVE_DONE;
-        }
-
-        if (!$this->implementsDone) {
-            $res = $this->implementsScanner->passToken($tokenCode, $tokenName, $tokenVal, $fileStrNumber);
-
-            $this->implementsDone = $res === IScanner::DIRECTIVE_DONE;
-        }
-
         $this->usesScanner->passToken($tokenCode, $tokenName, $tokenVal, $fileStrNumber);
 
-        return IScanner::DIRECTIVE_IN_PROGRESS;
+        $parseDone = true;
+
+        $meta = $this->getTokenScannersMeta();
+        foreach ($meta as $blocked => $scannerComp) {
+            if ($this->{$blocked}) {
+                continue;
+            }
+
+            $res = $this->{$scannerComp}->passToken($tokenCode, $tokenName, $tokenVal, $fileStrNumber);
+            $this->{$blocked} = $res === IScanner::DIRECTIVE_DONE;
+
+            $parseDone = $parseDone && $this->{$blocked};
+        }
+
+        $this->parseDone = $this->parseDone ?: $parseDone;
+
+        return $this->parseDone ? IScanner::DIRECTIVE_DONE : IScanner::DIRECTIVE_IN_PROGRESS;
     }
 
+    /**
+     * @param string $string
+     * @return int
+     */
     public function passString(string $string)
     {
         $this->usesScanner->passString($string);
+
+        return $this->parseDone ? IScanner::DIRECTIVE_DONE : IScanner::DIRECTIVE_IN_PROGRESS;
     }
 
     /**
@@ -114,12 +122,14 @@ class ClassScanner implements ITokenScanner, IStringScanner
      */
     public function storeScanResults(IFileParseResult $fileParseResult)
     {
-        $fileParseResult = $this->extendsScanner->storeScanResults($fileParseResult);
-        $fileParseResult = $this->implementsScanner->storeScanResults($fileParseResult);
+        $tokenScannersMeta = $this->getTokenScannersMeta();
+
+        foreach ($tokenScannersMeta as $compName) {
+            $fileParseResult = $this->{$compName}->storeScanResults($fileParseResult);
+        }
+
         $fileParseResult = $this->usesScanner->storeScanResults($fileParseResult);
 
-        return $fileParseResult
-            ->setIsClass($this->isClass)
-            ->setClassName($this->className);
+        return $fileParseResult;
     }
 }
