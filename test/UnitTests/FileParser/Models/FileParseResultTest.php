@@ -132,4 +132,48 @@ class FileParseResultTest extends BaseTestCase
         $this->assertTrue($result->getIsAbstract());
         $this->assertTrue($result->getIsInterface());
     }
+
+    /**
+     * @covers ::setExtends
+     */
+    public function testSetExtends()
+    {
+        $result = new FileParseResult();
+
+        $result->setExtends('A');
+
+        $this->assertEquals('A', $result->getExtends());
+    }
+
+    /**
+     * @covers ::setImplements
+     */
+    public function testSetImplements()
+    {
+        $result = new FileParseResult();
+
+        $result->setImplements('A');
+
+        $this->assertEquals('A', $result->getImplements());
+    }
+
+    /**
+     * @covers ::addAlias
+     * @covers ::findAlias
+     * @covers ::getUseDependencies
+     */
+    public function testAliases()
+    {
+        $result = new FileParseResult();
+
+        $result->addAlias('myAlias1', 'A');
+
+        $this->assertEquals('A', $result->findAlias('myAlias1'));
+        $this->assertEquals(null, $result->findAlias('myAlias2'));
+
+        $result->addUseDependency('myAlias1');
+
+        $this->assertCount(1, $result->getUseDependencies());
+        $this->assertEquals('A', $result->getUseDependencies()[0]);
+    }
 }

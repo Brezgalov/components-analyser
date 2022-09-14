@@ -6,7 +6,7 @@ use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\ComponentsAnalyser;
 use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\AnalysisDataPhpRepository;
 use Brezgalov\ComponentsAnalyser\ComponentsAnalyser\Models\DirectoryAnalysisSettings;
 use Brezgalov\ComponentsAnalyser\ComponentsPickerSimple\ComponentsPickerSimple;
-use Brezgalov\ComponentsAnalyser\FileParserPhp8\FileParserPhp8;
+use Brezgalov\ComponentsAnalyser\FileParser\FileParser;
 use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
 
 /**
@@ -26,7 +26,7 @@ class AnalyserTest extends BaseTestCase
      */
     public function testScanDirectories()
     {
-        $anyPossibleParser = new FileParserPhp8();
+        $anyPossibleParser = new FileParser();
 
         $analyser = new ComponentsAnalyser([], $anyPossibleParser);
 
@@ -60,12 +60,10 @@ class AnalyserTest extends BaseTestCase
         $this->assertEquals($settings3, $settingsGot[1]);
     }
 
-    /**
-     * @requires PHP >= 8.0
-     *
+    /**    *
      * @covers ::scanComponents
      */
-    public function testAnalysisPhp8()
+    public function testAnalysis()
     {
         $simplePicker = new ComponentsPickerSimple();
 
@@ -73,7 +71,7 @@ class AnalyserTest extends BaseTestCase
             new DirectoryAnalysisSettings(TEST_DIR . '/ExampleComponents', $simplePicker),
         ];
 
-        $parser = new FileParserPhp8();
+        $parser = new FileParser();
 
         $analyser = new ComponentsAnalyser($settings, $parser);
 

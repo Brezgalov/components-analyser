@@ -7,18 +7,24 @@ namespace Brezgalov\ComponentsAnalyser\FileParser;
 // @todo: teach parsers to determine abstract classes
 // @todo: teach parsers to determine interfaces
 
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ClassScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\IScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ITokenAndStringScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ITokenScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\Models\FileParseResult;
 use Brezgalov\ComponentsAnalyser\FileParser\Models\IFileParseResult;
 
-abstract class FileParser implements IFileParser
+class FileParser implements IFileParser
 {
     /**
      * @return IScanner[]
      */
-    public abstract function getCodeScanners();
+    public function getCodeScanners()
+    {
+        return [
+            new ClassScanner(),
+        ];
+    }
 
     /**
      * @param string $filePath
