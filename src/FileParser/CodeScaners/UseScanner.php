@@ -56,7 +56,7 @@ class UseScanner implements ITokenAndStringScanner
                 $this->useBuilding = $tokenVal;
                 return IScanner::DIRECTIVE_IN_PROGRESS;
             } else {
-                // @todo: namespace found somewhere across class
+                // @todo: namespace found somewhere across class ?
             }
         }
 

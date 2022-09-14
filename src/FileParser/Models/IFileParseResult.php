@@ -67,6 +67,12 @@ interface IFileParseResult
     public function addAlias(string $alias, string $value);
 
     /**
+     * @param string $alias
+     * @return string|null
+     */
+    public function findAlias(string $alias);
+
+    /**
      * returns classes from use statements
      * @return string[]
      */
@@ -78,27 +84,27 @@ interface IFileParseResult
     public function getError();
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getNamespace();
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getExtends();
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getImplements();
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getClassName();
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFullClassName();
 

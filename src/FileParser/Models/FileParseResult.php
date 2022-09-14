@@ -55,6 +55,24 @@ class FileParseResult implements IFileParseResult
     protected $isInterface = false;
 
     /**
+     * @param string $name
+     * @return string
+     */
+    public function resolveLocalNamespace(string $name)
+    {
+        $unaliased = $this->findAlias($name);
+        if ($unaliased) {
+            return $unaliased;
+        }
+
+        if ($this->getNamespace() && strpos($name, "\\") === false) {
+            return $this->getNamespace() . "\\{$name}";
+        }
+
+        return $name;
+    }
+
+    /**
      * @param string|null $val
      * @return IFileParseResult
      */
@@ -166,6 +184,15 @@ class FileParseResult implements IFileParseResult
     }
 
     /**
+     * @param string $alias
+     * @return string|null
+     */
+    public function findAlias(string $alias)
+    {
+        return $this->aliases[$alias] ?? null;
+    }
+
+    /**
      * @return string[]
      */
     public function getUseDependencies()
@@ -190,7 +217,7 @@ class FileParseResult implements IFileParseResult
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getClassName()
     {
@@ -198,7 +225,7 @@ class FileParseResult implements IFileParseResult
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getNamespace()
     {
@@ -206,23 +233,23 @@ class FileParseResult implements IFileParseResult
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getExtends()
     {
-        return $this->aliases[$this->extends] ?? $this->extends;
+        return $this->extends ? $this->resolveLocalNamespace($this->extends) : null;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getImplements()
     {
-        return $this->implements;
+        return $this->implements ? $this->resolveLocalNamespace($this->implements) : null;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFullClassName()
     {

@@ -6,8 +6,19 @@ use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\NamespaceScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\Models\FileParseResult;
 use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
 
+/**
+ * Class NamespaceScannerTest
+ * @package Brezgalov\ComponentsAnalyser\UnitTests\FileParser\CodeScanners
+ *
+ * @coversDefaultClass \Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\NamespaceScanner
+ */
 class NamespaceScannerTest extends BaseTestCase
 {
+    /**
+     * @covers ::passToken
+     * @covers ::passString
+     * @covers ::storeScanResults
+     */
     public function testScan()
     {
         $tokens = $this->getTokens(TEST_DIR . '/ExampleComponents/A/Classes/Class1.php');
@@ -20,8 +31,9 @@ class NamespaceScannerTest extends BaseTestCase
     }
 
     /**
-     * @covers ::storeScanResults
      * @covers ::passToken
+     * @covers ::passString
+     * @covers ::storeScanResults
      */
     public function testEmptyScript()
     {

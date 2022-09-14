@@ -14,6 +14,48 @@ use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
 class FileParseResultTest extends BaseTestCase
 {
     /**
+     * @covers ::resolveLocalNamespace
+     * @covers ::getExtends
+     */
+    public function testExtendsResolveLocalName()
+    {
+        $result = new FileParseResult();
+
+        $result->setExtends('MyExtends');
+
+        $this->assertEquals('MyExtends', $result->getExtends());
+
+        $result->setNamespace('MyNamespace');
+
+        $this->assertEquals('MyNamespace\MyExtends', $result->getExtends());
+
+        $result->addAlias('MyExtends', 'Aliases\MyExtends');
+
+        $this->assertEquals('Aliases\MyExtends', $result->getExtends());
+    }
+
+    /**
+     * @covers ::resolveLocalNamespace
+     * @covers ::getImplements
+     */
+    public function testImplementsResolveLocalName()
+    {
+        $result = new FileParseResult();
+
+        $result->setImplements('MyImplements');
+
+        $this->assertEquals('MyImplements', $result->getImplements());
+
+        $result->setNamespace('MyNamespace');
+
+        $this->assertEquals('MyNamespace\MyImplements', $result->getImplements());
+
+        $result->addAlias('MyImplements', 'Aliases\MyImplements');
+
+        $this->assertEquals('Aliases\MyImplements', $result->getImplements());
+    }
+
+    /**
      * @covers ::addUseDependency
      * @covers ::getUseDependencies
      */
