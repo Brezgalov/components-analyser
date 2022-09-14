@@ -37,6 +37,11 @@ class UseScanner implements ITokenAndStringScanner
     protected $aliases = [];
 
     /**
+     * @var bool
+     */
+    protected $done = false;
+
+    /**
      * @param int $tokenCode
      * @param string $tokenName
      * @param string $tokenVal
@@ -45,6 +50,15 @@ class UseScanner implements ITokenAndStringScanner
      */
     public function passToken(int $tokenCode, string $tokenName, string $tokenVal, int $fileStrNumber)
     {
+        if ($this->done) {
+            return IScanner::DIRECTIVE_DONE;
+        }
+
+        if ($tokenName === IScanner::TOKEN_CLASS) {
+            $this->done = true;
+            return IScanner::DIRECTIVE_DONE;
+        }
+
         if ($tokenName === IScanner::TOKEN_USE) {
             $this->useStarted = true;
             $this->useBuilding = null;
@@ -84,6 +98,10 @@ class UseScanner implements ITokenAndStringScanner
      */
     public function passString(string $string)
     {
+        if ($this->done) {
+            return IScanner::DIRECTIVE_DONE;
+        }
+
         if ($this->useStarted && $this->useBuilding) {
             if ($this->alias) {
                 $this->aliases[$this->alias] = $this->useBuilding;

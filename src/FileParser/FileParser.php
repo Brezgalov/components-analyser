@@ -76,11 +76,6 @@ class FileParser implements IFileParser
                     $scannersDone[$scannerId] = $scanner;
                     continue;
                 }
-
-                if ($resultDirective === IScanner::DIRECTIVE_ISSUE) {
-                    $result = $scanner->storeScanResults($result);
-                    return $result;
-                }
             }
 
             if (empty($scanners)) {
