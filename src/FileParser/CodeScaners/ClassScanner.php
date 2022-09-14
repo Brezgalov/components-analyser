@@ -9,27 +9,27 @@ class ClassScanner implements ITokenAndStringScanner
     /**
      * @var ITokenScanner|ClassNameScanner
      */
-    protected $classNameScanner;
+    public $classNameScanner;
 
     /**
      * @var ITokenAndStringScanner|NamespaceScanner
      */
-    protected $namespaceScanner;
+    public $namespaceScanner;
 
     /**
      * @var ITokenScanner|ExtendsScanner
      */
-    protected $extendsScanner;
+    public $extendsScanner;
 
     /**
      * @var UseScanner|UseScanner
      */
-    protected $usesScanner;
+    public $usesScanner;
 
     /**
      * @var ITokenScanner|ImplementsScanner
      */
-    protected $implementsScanner;
+    public $implementsScanner;
 
     /**
      * @var array

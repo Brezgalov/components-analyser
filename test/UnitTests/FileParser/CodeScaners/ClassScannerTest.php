@@ -2,7 +2,12 @@
 
 namespace Brezgalov\ComponentsAnalyser\UnitTests\FileParser\CodeScanners;
 
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ClassNameScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ClassScanner;
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ExtendsScanner;
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ImplementsScanner;
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\NamespaceScanner;
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\UseScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\Models\FileParseResult;
 use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
 
@@ -14,6 +19,20 @@ use Brezgalov\ComponentsAnalyser\UnitTests\BaseTestCase;
  */
 class ClassScannerTest extends BaseTestCase
 {
+    /**
+     * @covers ::__construct
+     */
+    public function testContruct()
+    {
+        $scanner = new ClassScanner();
+
+        $this->assertInstanceOf(ExtendsScanner::class, $scanner->extendsScanner);
+        $this->assertInstanceOf(ImplementsScanner::class, $scanner->implementsScanner);
+        $this->assertInstanceOf(UseScanner::class, $scanner->usesScanner);
+        $this->assertInstanceOf(ClassNameScanner::class, $scanner->classNameScanner);
+        $this->assertInstanceOf(NamespaceScanner::class, $scanner->namespaceScanner);
+    }
+
     /**
      * @covers ::passToken
      * @covers ::passString
