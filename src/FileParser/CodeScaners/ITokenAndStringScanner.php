@@ -2,7 +2,7 @@
 
 namespace Brezgalov\ComponentsAnalyser\FileParser\CodeScaners;
 
-interface IStringScanner extends IScanner
+interface ITokenAndStringScanner extends ITokenScanner
 {
     /**
      * @param string $string

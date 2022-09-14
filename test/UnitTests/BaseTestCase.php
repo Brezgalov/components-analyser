@@ -3,7 +3,7 @@
 namespace Brezgalov\ComponentsAnalyser\UnitTests;
 
 use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\IScanner;
-use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\IStringScanner;
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ITokenAndStringScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ITokenScanner;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +29,7 @@ abstract class BaseTestCase extends TestCase
     /**
      * @param array $tokens
      * @param IScanner $scanner
-     * @return IScanner|IStringScanner|ITokenScanner
+     * @return IScanner|ITokenAndStringScanner|ITokenScanner
      */
     protected function scanTokens(array $tokens, IScanner $scanner)
     {
@@ -41,7 +41,7 @@ abstract class BaseTestCase extends TestCase
                 $scanner->passToken($tokenCode, $tokenName, $tokenVal, $fileStrNumber);
             }
 
-            if (is_string($tokenInfo) && $scanner instanceof IStringScanner) {
+            if (is_string($tokenInfo) && $scanner instanceof ITokenAndStringScanner) {
                 $scanner->passString($tokenInfo);
             }
         }

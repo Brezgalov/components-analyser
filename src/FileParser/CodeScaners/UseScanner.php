@@ -4,7 +4,7 @@ namespace Brezgalov\ComponentsAnalyser\FileParser\CodeScaners;
 
 use Brezgalov\ComponentsAnalyser\FileParser\Models\IFileParseResult;
 
-class UseScanner implements ITokenScanner, IStringScanner
+class UseScanner implements ITokenAndStringScanner
 {
     /**
      * @var bool

@@ -14,6 +14,7 @@ interface IScanner
     const TOKEN_NS_SEPARATOR = "T_NS_SEPARATOR";
     const TOKEN_EXTENDS = "T_EXTENDS";
     const TOKEN_IMPLEMENTS = "T_IMPLEMENTS";
+    const TOKEN_NAMESPACE = "T_NAMESPACE";
 
     const DIRECTIVE_IN_PROGRESS = 0;
     const DIRECTIVE_DONE = 1;

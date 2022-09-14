@@ -8,7 +8,7 @@ namespace Brezgalov\ComponentsAnalyser\FileParser;
 // @todo: teach parsers to determine interfaces
 
 use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\IScanner;
-use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\IStringScanner;
+use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ITokenAndStringScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\CodeScaners\ITokenScanner;
 use Brezgalov\ComponentsAnalyser\FileParser\Models\FileParseResult;
 use Brezgalov\ComponentsAnalyser\FileParser\Models\IFileParseResult;
@@ -57,7 +57,7 @@ abstract class FileParser implements IFileParser
                     $resultDirective = $scanner->passToken($tokenCode, $tokenName, $tokenVal, $fileStrNumber);
                 }
 
-                if (is_string($tokenInfo) && $scanner instanceof IStringScanner) {
+                if (is_string($tokenInfo) && $scanner instanceof ITokenAndStringScanner) {
                     $resultDirective = $scanner->passString($tokenInfo);
                 }
 
