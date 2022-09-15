@@ -79,7 +79,47 @@ class AnalyserTest extends BaseTestCase
 
         $this->assertInstanceOf(AnalysisDataPhpRepository::class, $result);
 
-        // @todo: check results
-//        $this->assertEquals(1, 0);
+        $components = [
+            'A' => TEST_DIR . '/ExampleComponents/A',
+            'B' => TEST_DIR . '/ExampleComponents/B',
+            'C' => TEST_DIR . '/ExampleComponents/C',
+            'D' => TEST_DIR . '/ExampleComponents/D',
+        ];
+
+        $this->assertEquals(array_values($components), $result->getComponentsDirsList());
+
+        foreach ($components as $compName => $compDir) {
+            $name = $result->getComponentNameByDir($compDir);
+            $this->assertEquals($compName, $name);
+        }
+
+        $componentsClasses = [
+            TEST_DIR . '/ExampleComponents/A' => [
+                'ExampleComponents\\A\\CompA',
+                'ExampleComponents\\A\\Classes\\Class1',
+                'ExampleComponents\\A\\Classes\\Base\\BaseClass1',
+            ],
+            TEST_DIR . '/ExampleComponents/B' => [
+                'ExampleComponents\\B\\CompB',
+                'ExampleComponents\\B\\Classes\\ChildClass',
+            ],
+            TEST_DIR . '/ExampleComponents/C' => [
+                'ExampleComponents\\C\\CompC',
+            ],
+            TEST_DIR . '/ExampleComponents/D' => [
+                'ExampleComponents\\D\\CompD',
+            ],
+        ];
+
+        foreach ($componentsClasses as $compDir => $classes) {
+            $classesFound = $result->getComponentOwnClasses($compDir);
+
+            foreach ($classes as $class) {
+                $this->assertContains($class, $classesFound);
+            }
+        }
+
+        // @todo: add more tests
+        $a = 1;
     }
 }

@@ -95,7 +95,7 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
      */
     public function addComponentDependency(string $componentPath, string $ownClassName, string $dependencyClassName)
     {
-        // bind own class to component
+        // bind own class to component if it's not
         $this->addComponentOwnClass(
             $componentPath,
             $ownClassName

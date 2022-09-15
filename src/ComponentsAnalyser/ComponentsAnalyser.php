@@ -100,6 +100,11 @@ class ComponentsAnalyser
                         $filePath
                     );
 
+                    $dataRepository->addComponentOwnClass(
+                        $component->getRootDirectoryPath(),
+                        $fileParseResult->getFullClassName()
+                    );
+
                     // current class uses every dependency class
                     foreach ($fileParseResult->getUseDependencies() as $dependencyClass) {
                         $dataRepository->addComponentDependency(
