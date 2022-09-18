@@ -2,7 +2,8 @@
 
 namespace ExampleComponents\D;
 
-use ExampleComponents\A\CompA;
+// unused dependency counts anyway
+use ExampleComponents\B\CompB;
 
 class CompD
 {
@@ -13,6 +14,7 @@ class CompD
 
     public function getCompCClass()
     {
+        // @todo: make it count. Dependency not visible yet
         // keep full namespace for tests
         return \ExampleComponents\C\CompC::class;
     }

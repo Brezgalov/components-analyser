@@ -117,6 +117,28 @@ class ComponentsAnalyser
                             $dependencyClass
                         );
                     }
+
+                    // fully qualified names for implmnt and extnd clauses are not use dependencies
+                    // check them out to be sure they are counted as dependency
+
+                    $extends = $fileParseResult->getExtends();
+                    $implements = $fileParseResult->getImplements();
+
+                    if ($extends) {
+                        $dataRepository->addComponentDependency(
+                            $component->getRootDirectoryPath(),
+                            $fileParseResult->getFullClassName(),
+                            $extends
+                        );
+                    }
+
+                    if ($implements) {
+                        $dataRepository->addComponentDependency(
+                            $component->getRootDirectoryPath(),
+                            $fileParseResult->getFullClassName(),
+                            $implements
+                        );
+                    }
                 }
             }
         }

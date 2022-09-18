@@ -79,6 +79,7 @@ class AnalyserTest extends BaseTestCase
 
         $this->assertInstanceOf(AnalysisDataPhpRepository::class, $result);
 
+        // Test components scanned correctly
         $components = [
             'A' => TEST_DIR . '/ExampleComponents/A',
             'B' => TEST_DIR . '/ExampleComponents/B',
@@ -93,6 +94,7 @@ class AnalyserTest extends BaseTestCase
             $this->assertEquals($compName, $name);
         }
 
+        // Test component files scanned correctly
         $componentsClasses = [
             TEST_DIR . '/ExampleComponents/A' => [
                 'ExampleComponents\\A\\CompA',
@@ -117,12 +119,44 @@ class AnalyserTest extends BaseTestCase
         foreach ($componentsClasses as $compDir => $classes) {
             $classesFound = $result->getComponentOwnClasses($compDir);
 
+            $this->assertCount(count($classes), $classesFound);
             foreach ($classes as $class) {
                 $this->assertContains($class, $classesFound);
             }
         }
 
-        // @todo: add more tests
-        $a = 1;
+        // Test components dependencies
+        $compDependencies = [
+            TEST_DIR . '/ExampleComponents/A' => [
+                TEST_DIR . '/ExampleComponents/B',
+            ],
+            TEST_DIR . '/ExampleComponents/B' => [
+                TEST_DIR . '/ExampleComponents/A',
+                TEST_DIR . '/ExampleComponents/C',
+            ],
+            TEST_DIR . '/ExampleComponents/C' => [
+                TEST_DIR . '/ExampleComponents/A',
+            ],
+            TEST_DIR . '/ExampleComponents/D' => [
+                TEST_DIR . '/ExampleComponents/B',
+            ],
+        ];
+
+        foreach ($compDependencies as $component => $depComponents) {
+            $depsFound = $result->getComponentExternalComponentDependencies($component);
+
+            $this->assertCount(count($depComponents), $depsFound);
+
+            foreach ($depComponents as $depComponent) {
+                $this->assertContains($depComponent, $depsFound);
+            }
+        }
+
+        //@todo: bug: some A class are marked as external dependency for A
+
+        // Test components external class dependencies
+        // Test class external class dependencies
+
+        // check internal dependencies?
     }
 }

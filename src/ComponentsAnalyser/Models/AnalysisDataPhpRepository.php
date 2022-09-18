@@ -277,7 +277,7 @@ class AnalysisDataPhpRepository implements IAnalysisDataRepository
         foreach ($dependencyClasses as $dependencyClass) {
             $dependencyComponent = $this->getClassComponent($dependencyClass);
 
-            if ($dependencyComponent !== $compDir) {
+            if ($dependencyComponent && $dependencyComponent !== $compDir) {
                 $components[$dependencyComponent] = true;
             }
         }
