@@ -7,6 +7,7 @@ use Brezgalov\ComponentsAnalyser\FileParser\Models\IFileParseResult;
 interface IScanner
 {
     const TOKEN_CLASS = "T_CLASS";
+    const TOKEN_INTERFACE = "T_INTERFACE";
     const TOKEN_STRING = "T_STRING";
     const TOKEN_NAME_QUALIFIED = "T_NAME_QUALIFIED";
     const TOKEN_USE = "T_USE";

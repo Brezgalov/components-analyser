@@ -2,7 +2,9 @@
 
 namespace ExampleComponents\A\Classes;
 
-interface Interface1
+use ExampleComponents\A\Classes\Base\BaseInterface;
+
+interface Interface1 extends BaseInterface
 {
 
 }

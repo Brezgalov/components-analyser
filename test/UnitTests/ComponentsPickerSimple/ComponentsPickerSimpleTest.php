@@ -76,11 +76,13 @@ class ComponentsPickerSimpleTest extends BaseTestCase
         $this->assertArrayHasKey('D', $components);
         
         $this->assertIsArray($components['A']->files);
-        $this->assertCount(4, $components['A']->files);
-        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/CompA.php', $components['A']->files));
-        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Class1.php', $components['A']->files));
-        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Interface1.php', $components['A']->files));
-        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Base/BaseClass1.php', $components['A']->files));
+        $this->assertCount(6, $components['A']->files);
+        $this->assertContains(TEST_DIR . '/ExampleComponents/A/CompA.php', $components['A']->files);
+        $this->assertContains(TEST_DIR . '/ExampleComponents/A/Classes/Class1.php', $components['A']->files);
+        $this->assertContains(TEST_DIR . '/ExampleComponents/A/Classes/Interface1.php', $components['A']->files);
+        $this->assertContains(TEST_DIR . '/ExampleComponents/A/Classes/Interface2.php', $components['A']->files);
+        $this->assertContains(TEST_DIR . '/ExampleComponents/A/Classes/Base/BaseClass1.php', $components['A']->files);
+        $this->assertContains(TEST_DIR . '/ExampleComponents/A/Classes/Base/BaseInterface.php', $components['A']->files);
 
         $this->assertIsArray($components['B']->files);
         $this->assertCount(3, $components['B']->files);

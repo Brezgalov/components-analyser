@@ -32,6 +32,11 @@ class ClassScanner implements ITokenAndStringScanner
     public $implementsScanner;
 
     /**
+     * @var ITokenScanner|InterfaceScanner
+     */
+    public $interfaceScanner;
+
+    /**
      * @var array
      */
     protected $doneParams = [];
@@ -43,24 +48,27 @@ class ClassScanner implements ITokenAndStringScanner
 
     /**
      * ClassScanner constructor.
-     * @param ITokenScanner|null $extendsScanner
-     * @param ITokenScanner|null $implementsScanner
-     * @param ITokenAndStringScanner|null $usesScanner
-     * @param ITokenScanner|null $classNameScanner
-     * @param ITokenAndStringScanner|null $namespaceScanner
+     * @param ITokenScanner|ExtendsScanner|null $extendsScanner
+     * @param ITokenScanner|ImplementsScanner|null $implementsScanner
+     * @param ITokenAndStringScanner|UseScanner|null $usesScanner
+     * @param ITokenScanner|ClassNameScanner|null $classNameScanner
+     * @param ITokenAndStringScanner|NamespaceScanner|null $namespaceScanner
+     * @param ITokenScanner|InterfaceScanner|null $interfaceScanner
      */
     public function __construct(
         ITokenScanner $extendsScanner = null,
         ITokenScanner $implementsScanner = null,
         ITokenAndStringScanner $usesScanner = null,
         ITokenScanner $classNameScanner = null,
-        ITokenAndStringScanner $namespaceScanner = null
+        ITokenAndStringScanner $namespaceScanner = null,
+        ITokenScanner $interfaceScanner = null
     ) {
         $this->extendsScanner = $extendsScanner ?: new ExtendsScanner();
         $this->implementsScanner = $implementsScanner ?: new ImplementsScanner();
         $this->usesScanner = $usesScanner ?: new UseScanner();
         $this->classNameScanner = $classNameScanner ?: new ClassNameScanner();
         $this->namespaceScanner = $namespaceScanner ?: new NamespaceScanner();
+        $this->interfaceScanner = $interfaceScanner ?: new InterfaceScanner();
     }
 
     /**
@@ -72,6 +80,7 @@ class ClassScanner implements ITokenAndStringScanner
             'classNameScanner',
             'extendsScanner',
             'implementsScanner',
+            'interfaceScanner',
         ];
     }
 

@@ -91,8 +91,12 @@ class ComponentsAnalyser
                 foreach ($component->getFilesList() as $filePath) {
                     $fileParseResult = $this->fileParser->parseFile($filePath);
 
-                    if (!$fileParseResult->getIsClass()) {
+                    if (!$fileParseResult->getIsClass() && !$fileParseResult->getIsInterface()) {
                         continue;
+                    }
+
+                    if (empty($fileParseResult->getFullClassName())) {
+                        $a = 1;
                     }
 
                     $dataRepository->addClassFile(

@@ -57,28 +57,33 @@ class DirectoriesScanHelperTest extends BaseTestCase
         $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false);
 
         $this->assertIsArray($files);
-        $this->assertCount(4, $files);
-        $this->assertTrue(in_array('CompA.php', $files));
-        $this->assertTrue(in_array('Classes/Class1.php', $files));
-        $this->assertTrue(in_array('Classes/Interface1.php', $files));
-        $this->assertTrue(in_array('Classes/Base/BaseClass1.php', $files));
+        $this->assertCount(6, $files);
+        $this->assertContains('CompA.php', $files);
+        $this->assertContains('Classes/Class1.php', $files);
+        $this->assertContains('Classes/Interface1.php', $files);
+        $this->assertContains('Classes/Interface2.php', $files);
+        $this->assertContains('Classes/Base/BaseClass1.php', $files);
+        $this->assertContains('Classes/Base/BaseInterface.php', $files);
 
         $files = $helper->getDirectoryFiles(TEST_DIR . '/ExampleComponents/A');
 
         $this->assertIsArray($files);
-        $this->assertCount(4, $files);
+        $this->assertCount(6, $files);
         $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/CompA.php', $files));
         $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Class1.php', $files));
         $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Interface1.php', $files));
+        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Interface2.php', $files));
         $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Base/BaseClass1.php', $files));
+        $this->assertTrue(in_array(TEST_DIR . '/ExampleComponents/A/Classes/Base/BaseInterface.php', $files));
 
         $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 1, false);
 
         $this->assertIsArray($files);
-        $this->assertCount(3, $files);
+        $this->assertCount(4, $files);
         $this->assertTrue(in_array('CompA.php', $files));
         $this->assertTrue(in_array('Classes/Class1.php', $files));
         $this->assertTrue(in_array('Classes/Interface1.php', $files));
+        $this->assertTrue(in_array('Classes/Interface2.php', $files));
 
         try {
             $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 1, true);
@@ -91,7 +96,7 @@ class DirectoriesScanHelperTest extends BaseTestCase
         $files = $helper->getDirectoryFiles(TEST_DIR . "/ExampleComponents/A", false, 100, true, false);
 
         $this->assertIsArray($files);
-        $this->assertCount(5, $files);
+        $this->assertCount(7, $files);
         $this->assertTrue(in_array('config.json', $files));
     }
 }

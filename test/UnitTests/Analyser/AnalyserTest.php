@@ -97,7 +97,10 @@ class AnalyserTest extends BaseTestCase
             TEST_DIR . '/ExampleComponents/A' => [
                 'ExampleComponents\\A\\CompA',
                 'ExampleComponents\\A\\Classes\\Class1',
+                'ExampleComponents\\A\\Classes\\Interface1',
+                'ExampleComponents\\A\\Classes\\Interface2',
                 'ExampleComponents\\A\\Classes\\Base\\BaseClass1',
+                'ExampleComponents\\A\\Classes\\Base\\BaseInterface',
             ],
             TEST_DIR . '/ExampleComponents/B' => [
                 'ExampleComponents\\B\\CompB',
